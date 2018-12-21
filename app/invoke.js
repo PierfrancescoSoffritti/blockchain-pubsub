@@ -47,7 +47,7 @@ FabricClient.newDefaultKeyValueStore({ path: storePath }).then( stateStore => {
 	transactionId = fabricClient.newTransactionID();
 
 	const request = {
-		//targets: let default to the peer assigned to the client
+		//targets: default to the peer assigned to the client
 		chaincodeId: 'IOchannel',
 		fcn: 'putMessage',
 		args: ['MSG2', 'newSenderId', 'message from outside'],
