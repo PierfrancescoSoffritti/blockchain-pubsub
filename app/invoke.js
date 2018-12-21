@@ -1,10 +1,10 @@
 'use strict';
 
-const Fabric_Client = require('fabric-client');
+const FabricClient = require('fabric-client');
 const path = require('path');
 const util = require('util');
 
-const fabricClient = new Fabric_Client();
+const fabricClient = new FabricClient();
 
 // setup the fabric network
 const channel = fabricClient.newChannel('mychannel');
@@ -18,33 +18,33 @@ channel.addOrderer(order);
 const storePath = path.join(__dirname, 'hfc-key-store');
 
 const userName = 'user1';
-let tx_id = null;
+let transactionId = null;
 
 // create the key value store as defined in the fabric-client/config/default.json 'key-value-store' setting
-Fabric_Client.newDefaultKeyValueStore({ path: storePath }).then( stateStore => {
+FabricClient.newDefaultKeyValueStore({ path: storePath }).then( stateStore => {
 	
 	// assign the store to the fabric client
 	fabricClient.setStateStore(stateStore);
-	const cryptoSuite = Fabric_Client.newCryptoSuite();
+	const cryptoSuite = FabricClient.newCryptoSuite();
 
 	// use the same location for the state store (where the users' certificate are kept)
 	// and the crypto store (where the users' keys are kept)
-	const cryptoStore = Fabric_Client.newCryptoKeyStore( { path: storePath } );
+	const cryptoStore = FabricClient.newCryptoKeyStore( { path: storePath } );
 	cryptoSuite.setCryptoKeyStore(cryptoStore);
 	fabricClient.setCryptoSuite(cryptoSuite);
 
 	// get the enrolled user from persistence, this user will sign all requests
 	return fabricClient.getUserContext(userName, true);
 
-}).then( user_from_store => {
+}).then( userFromStore => {
 
-	if (user_from_store && user_from_store.isEnrolled())
+	if (userFromStore && userFromStore.isEnrolled())
 		console.log(`Successfully loaded user ${userName} from persistence`);
 	else
 		throw new Error(`Failed to get user ${userName}... run registerUser.js`);
 
 	// get a transaction id object based on the current user assigned to fabric client
-	tx_id = fabricClient.newTransactionID();
+	transactionId = fabricClient.newTransactionID();
 
 	const request = {
 		//targets: let default to the peer assigned to the client
@@ -52,10 +52,10 @@ Fabric_Client.newDefaultKeyValueStore({ path: storePath }).then( stateStore => {
 		fcn: 'putMessage',
 		args: ['MSG2', 'newSenderId', 'message from outside'],
 		chainId: 'mychannel',
-		txId: tx_id
+		txId: transactionId
 	};
 
-	// send the transaction proposal to the peers for endorment
+	// send the transaction proposal to the peers for endorsment
 	return channel.sendTransactionProposal(request);
 
 }).then( results => {
@@ -87,7 +87,7 @@ Fabric_Client.newDefaultKeyValueStore({ path: storePath }).then( stateStore => {
 	};
 
 	// set the transaction listener and set a timeout of 30 sec if the transaction did not get committed within the timeout period, report a TIMEOUT status
-	const transaction_id_string = tx_id.getTransactionID(); //Get the transaction ID string to be used by the event processing
+	const transaction_id_string = transactionId.getTransactionID(); //Get the transaction ID string to be used by the event processing
 	const promises = [];
 
 	const commitTransactionPromise = channel.sendTransaction(commitTransactionRequest);
