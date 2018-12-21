@@ -61,7 +61,7 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
 		//targets: let default to the peer assigned to the client
 		chaincodeId: 'IOchannel',
 		fcn: 'putMessage',
-		args: ['MSG1', 'newSenderId', 'message from outside'],
+		args: ['MSG2', 'newSenderId', 'message from outside'],
 		chainId: 'mychannel',
 		txId: tx_id
 	};

@@ -13,6 +13,8 @@ var path = require('path');
 var util = require('util');
 var os = require('os');
 
+const Query = require('./query');
+
 //
 var fabric_client = new Fabric_Client();
 
@@ -69,6 +71,9 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path }).then((state_store) =
 
         let block_reg = event_hub.registerBlockEvent((block) => {
             console.log('Successfully received the block event');
+            
+            Query()
+
         }, (error)=> {
             console.log('Failed to receive the block event ::'+error);
             event_hub.disconnect();
