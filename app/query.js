@@ -20,7 +20,8 @@ async function Query() {
 
 	try {
 
-		await HyperledgerUtils.initClient( { FabricClient,	fabricClient, storePath, userName } );
+		await HyperledgerUtils.initClient( FabricClient, fabricClient, storePath );
+		await HyperledgerUtils.checkUserIsEnrolled( fabricClient, userName )
 
 		const request = {
 			//targets : default to the peer assigned to the client
@@ -61,6 +62,6 @@ async function test() {
 	console.log(res)
 }
 
-// test()
+test()
 
 module.exports = Query

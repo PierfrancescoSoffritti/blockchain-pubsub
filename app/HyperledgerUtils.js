@@ -1,5 +1,5 @@
 
-async function initClient( { FabricClient, fabricClient, storePath, userName } ) {
+async function initClient( FabricClient, fabricClient, storePath ) {
 
     // create the key value store as defined in the fabric-client/config/default.json 'key-value-store' setting
     const stateStore = await FabricClient.newDefaultKeyValueStore( { path: storePath } )
@@ -14,6 +14,10 @@ async function initClient( { FabricClient, fabricClient, storePath, userName } )
     cryptoSuite.setCryptoKeyStore(cryptoStore);
     fabricClient.setCryptoSuite(cryptoSuite);
 
+    return cryptoSuite;
+}
+
+async function checkUserIsEnrolled(fabricClient, userName) {
     // get the enrolled user from persistence, this user will sign all requests
     const userFromStore = await fabricClient.getUserContext(userName, true);
 
@@ -21,9 +25,6 @@ async function initClient( { FabricClient, fabricClient, storePath, userName } )
         console.log(`Successfully loaded ${userName} from persistence`);
     else
         throw new Error(`Failed to get ${userName}... run registerUser.js`);
-
-    const transactionId = fabricClient.newTransactionID();
-    return transactionId;
 }
 
 function checkTransactionProposalResponses(proposalResponses) {   
@@ -90,6 +91,7 @@ function subscribeTxEventListener(channel, peer, transactionId) {
 }
 
 module.exports.initClient = initClient;
+module.exports.checkUserIsEnrolled = checkUserIsEnrolled;
 module.exports.checkTransactionProposalResponses = checkTransactionProposalResponses;
 module.exports.commitTransaction = commitTransaction;
 module.exports.subscribeTxEventListener = subscribeTxEventListener;

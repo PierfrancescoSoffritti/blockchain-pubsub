@@ -22,7 +22,8 @@ const userName = 'user1';
 async function listenForNewBlocks() {
     try {
 
-        await HyperledgerUtils.initClient( { FabricClient, fabricClient, storePath, userName } );
+        await HyperledgerUtils.initClient( FabricClient, fabricClient, storePath );
+		await HyperledgerUtils.checkUserIsEnrolled( fabricClient, userName )
 
         // get an eventhub once the fabric client has a user assigned. The user is required bacause the event registration must be signed
         let eventHub = channel.newChannelEventHub(peer);

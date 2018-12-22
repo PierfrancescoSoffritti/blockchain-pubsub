@@ -22,7 +22,9 @@ const userName = 'user1';
 async function Invoke() {
 	try {
 
-		const transactionId = await HyperledgerUtils.initClient( { FabricClient, fabricClient, storePath, userName } );
+		await HyperledgerUtils.initClient( FabricClient, fabricClient, storePath );
+		await HyperledgerUtils.checkUserIsEnrolled( fabricClient, userName )
+		const transactionId = fabricClient.newTransactionID();
 
 		const request = {
 			//targets: default to the peer assigned to the client
