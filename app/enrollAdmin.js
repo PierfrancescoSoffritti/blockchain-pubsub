@@ -7,17 +7,19 @@ const path = require('path');
 
 const fabricClient = new FabricClient();
 const storePath = path.join(__dirname, 'hfc-key-store');
-const adminUserName = "admin";
 
-async function enrollAdmin() {
+async function enrollAdmin(adminUserName) {
     try {
+        if(!adminUserName)
+            throw new Error("Wrong arguments. Admin user name is missing")
+
         const cryptoSuite = await HyperledgerUtils.initClient( FabricClient, fabricClient, storePath );
     
         // first check to see if the admin is already enrolled
         const userFromStore = await fabricClient.getUserContext(adminUserName, true);
 
         if (userFromStore && userFromStore.isEnrolled()) {
-            console.log(`Successfully loaded admin ${adminUserName} from persistence`);
+            console.log(`[enrollAdmin] successfully loaded admin ${adminUserName} from persistence`);
             return;
         }
 
@@ -34,7 +36,7 @@ async function enrollAdmin() {
             // need to enroll it with CA server
             const enrollment = await fabricCAClient.enroll({ enrollmentID: adminUserName, enrollmentSecret: 'adminpw' })
 
-            console.log(`Successfully enrolled admin user ${adminUserName}`);
+            console.log(`[enrollAdmin] successfully enrolled admin user ${adminUserName}`);
 
             const user = await fabricClient.createUser( {
                 username: adminUserName,
@@ -44,19 +46,21 @@ async function enrollAdmin() {
             
             await fabricClient.setUserContext(user);
 
-            console.log(`Assigned the admin user to the fabric client: ${user.toString()}`);
+            console.log(`[enrollAdmin] assigned the admin user to the fabric client: ${user.toString()}`);
 
         } catch(error) {
-            throw new Error(`Failed to enroll and persist admin. Error: ${error.stack ? error.stack : error}`);
+            throw new Error(`[enrollAdmin] failed to enroll and persist admin. Error: ${error.stack ? error.stack : error}`);
         }
 
     } catch(error) {
-        console.error(`Failed to enroll admin: ${error}`);
+        console.error(`[enrollAdmin] failed to enroll admin: ${error}`);
     }
 }
 
-async function test() {
-    await enrollAdmin()
-}
+// async function test() {
+//     await enrollAdmin("admin")
+// }
 
-test()
+// test()
+
+module.exports = enrollAdmin

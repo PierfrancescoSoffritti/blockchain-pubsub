@@ -15,17 +15,19 @@ const path = require('path');
 
 const fabricClient = new FabricClient();
 const storePath = path.join(__dirname, 'hfc-key-store');
-const userName = "user1";
 
-async function registerUser() {
+async function registerUser(userName) {
     try {
+        if(!userName)
+            throw new Error("Wrong arguments. User name is missing")
+
         const cryptoSuite = await HyperledgerUtils.initClient( FabricClient, fabricClient, storePath );
 
         // first check to see if the admin is already enrolled
         const adminFromStore = await fabricClient.getUserContext('admin', true);
 
         if (adminFromStore && adminFromStore.isEnrolled())
-            console.log('Successfully loaded admin from persistence');
+            console.log('[registerUser] successfully loaded admin from persistence');
         else
             throw new Error('Failed to get admin... run enrollAdmin.js');
     
@@ -38,14 +40,14 @@ async function registerUser() {
             adminFromStore
         );
 
-        console.log(`Successfully registered ${userName}, secret: ${secret}`);
+        console.log(`[registerUser] successfully registered ${userName}, secret: ${secret}`);
         
         // next we need to enroll the user with CA server
         const enrollment = await fabricCaClient.enroll({ enrollmentID: userName, enrollmentSecret: secret });
 
-        console.log(`Successfully enrolled member user ${userName}`);
+        console.log(`[registerUser] successfully enrolled member user ${userName}`);
 
-        const memberUser = fabricClient.createUser( { 
+        const memberUser = await fabricClient.createUser( { 
             username: userName,
             mspid: 'Org1MSP',
             cryptoContent: { privateKeyPEM: enrollment.key.toBytes(), signedCertPEM: enrollment.certificate }
@@ -53,20 +55,22 @@ async function registerUser() {
 
         await fabricClient.setUserContext(memberUser);
 
-        console.log(`User ${userName} was successfully registered and enrolled and is ready to interact with the fabric network`);
+        console.log(`[registerUser] user ${userName} was successfully registered and enrolled and is ready to interact with the fabric network`);
 
     } catch(error) {
-        console.error(`Failed to register user ${userName}: ${error}`);
+        console.error(`[registerUser] failed to register user ${userName}: ${error}`);
         
         if(error.toString().indexOf('Authorization') > -1) {
-            console.error(`Authorization failures may be caused by having admin credentials from a previous CA instance.
+            console.error(`[registerUser] authorization failures may be caused by having admin credentials from a previous CA instance.
             Try again after deleting the contents of the store directory: ${storePath}`);
 	    }
     }
 }
 
-async function test() {
-    await registerUser()
-}
+// async function test() {
+//     await registerUser("user1")
+// }
 
-test()
+// test()
+
+module.exports = registerUser

@@ -17,10 +17,11 @@ const order = fabricClient.newOrderer('grpc://localhost:7050')
 channel.addOrderer(order);
 
 const storePath = path.join(__dirname, 'hfc-key-store');
-const userName = 'user1';
 
-async function Invoke() {
+async function Invoke(userName) {
 	try {
+		if(!userName)
+            throw new Error("Wrong arguments. User name is missing")
 
 		await HyperledgerUtils.initClient( FabricClient, fabricClient, storePath );
 		await HyperledgerUtils.checkUserIsEnrolled( fabricClient, userName )
@@ -30,7 +31,7 @@ async function Invoke() {
 			//targets: default to the peer assigned to the client
 			chaincodeId: 'IOchannel',
 			fcn: 'putMessage',
-			args: ['MSG3', 'newSenderId', 'message from outside'],
+			args: ['MSG4', 'newSenderId', 'message from outside'],
 			chainId: 'mychannel',
 			txId: transactionId
 		};
@@ -41,34 +42,30 @@ async function Invoke() {
 		const transactionProposalResponses = results[0];
 		const transactionProposal = results[1];
 
-		const promises = [];
-
 		HyperledgerUtils.checkTransactionProposalResponses(transactionProposalResponses);
-		const commitTransactionPromise = HyperledgerUtils.commitTransaction(channel, transactionProposalResponses, transactionProposal);
+		const commitTransactionResult = await HyperledgerUtils.commitTransaction(channel, transactionProposalResponses, transactionProposal);
+		
+		if (commitTransactionResult && commitTransactionResult.status === 'SUCCESS')
+			console.log('[invoke] successfully sent transaction to the orderer.');
+		else
+			console.error(`[invoke] failed to order the transaction. Error code: ${commitTransactionResult.status}`);
 
-		const txEventPromise = HyperledgerUtils.subscribeTxEventListener(channel, peer, transactionId);
-
-		commitTransactionPromise.then( result => {
-			if (result && result.status === 'SUCCESS')
-				console.log('Successfully sent transaction to the orderer.');
-			else
-				console.error(`Failed to order the transaction. Error code: ${result.status}`);
-		});
-
-		txEventPromise.then( result => {
-			if(result && result.event_status === 'VALID')
-				console.log('Successfully committed the change to the ledger by the peer');
-			else
-				console.log(`Transaction failed to be committed to the ledger due to: ${result.event_status}`);
-		});
+		const subsribeTxResult = await HyperledgerUtils.subscribeTxEventListener(channel, peer, transactionId);
+		
+		if(subsribeTxResult && subsribeTxResult.event_status === 'VALID')
+			console.log('[invoke] successfully committed the change to the ledger by the peer');
+		else
+			console.log(`[invoke] transaction failed to be committed to the ledger due to: ${subsribeTxResult.event_status}`);
 
 	} catch (error) {
-		console.error(`Failed to invoke successfully: ${error}`);
+		console.error(`[invoke] failed to invoke successfully: ${error}`);
 	}
 }
 
-async function test() {
-	await Invoke();
-}
+// async function test() {
+// 	await Invoke("user1");
+// }
 
-test()
+// test()
+
+module.exports = Invoke

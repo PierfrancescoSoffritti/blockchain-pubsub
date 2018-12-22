@@ -14,11 +14,10 @@ channel.addPeer(peer);
 
 const storePath = path.join(__dirname, 'hfc-key-store');
 
-const userName = 'user1';
-
-async function Query() {
-
+async function Query(userName) {
 	try {
+		if(!userName)
+            throw new Error("Wrong arguments. User name is missing")
 
 		await HyperledgerUtils.initClient( FabricClient, fabricClient, storePath );
 		await HyperledgerUtils.checkUserIsEnrolled( fabricClient, userName )
@@ -37,31 +36,31 @@ async function Query() {
 		return response;
 
 	} catch(error) {
-		console.error(`Failed to query successfully: ${error}`);
+		console.error(`[query] failed to query successfully: ${error}`);
 	}
 
 	function checkQueryResponsesValidity(queryResponses) {
 		// queryResponses could have more than one results if multiple peers were used as targets
 		if (queryResponses && queryResponses.length == 1) {
 			if (queryResponses[0] instanceof Error)
-				console.error(`error from query: ${queryResponses[0]}`);
+				console.error(`[query] error from query: ${queryResponses[0]}`);
 			else {
 				const response = queryResponses[0].toString();
-				console.log(`Response is: ${response}`);
+				console.log(`[query] response is: ${response}`);
 				return response;
 			}
 		} else {
-			console.log("No payloads were returned from query");
+			console.log("[query] no payloads were returned from query");
 		}
 	}
 }
 
-async function test() {
-	const res = await Query();
-	console.log("--")
-	console.log(res)
-}
+// async function test() {
+// 	const res = await Query("user1");
+// 	console.log("--")
+// 	console.log(res)
+// }
 
-test()
+// test()
 
 module.exports = Query
