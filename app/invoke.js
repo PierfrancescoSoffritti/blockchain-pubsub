@@ -46,25 +46,22 @@ async function Invoke() {
 
 		HyperledgerUtils.checkTransactionProposalResponses(transactionProposalResponses);
 		const commitTransactionPromise = HyperledgerUtils.commitTransaction(channel, transactionProposalResponses, transactionProposal);
-		promises.push(commitTransactionPromise);		
 
 		const txEventPromise = HyperledgerUtils.subscribeTxEventListener(channel, peer, transactionId);
-		promises.push(txEventPromise);
 
-		const promisesResult = await Promise.all(promises);
+		commitTransactionPromise.then( result => {
+			if (result && result.status === 'SUCCESS')
+				console.log('Successfully sent transaction to the orderer.');
+			else
+				console.error(`Failed to order the transaction. Error code: ${result.status}`);
+		});
 
-		console.log('Send transaction promise and event listener promise have completed');
-		
-		// check the results in the order the promises were added to the promise all list
-		if (promisesResult && promisesResult[0] && promisesResult[0].status === 'SUCCESS')
-			console.log('Successfully sent transaction to the orderer.');
-		else
-			console.error(`Failed to order the transaction. Error code: ${promisesResult[0].status}`);
-
-		if(promisesResult && promisesResult[1] && promisesResult[1].event_status === 'VALID')
-			console.log('Successfully committed the change to the ledger by the peer');
-		else
-			console.log(`Transaction failed to be committed to the ledger due to: ${promisesResult[1].event_status}`);
+		txEventPromise.then( result => {
+			if(result && result.event_status === 'VALID')
+				console.log('Successfully committed the change to the ledger by the peer');
+			else
+				console.log(`Transaction failed to be committed to the ledger due to: ${result.event_status}`);
+		});
 
 	} catch (error) {
 		console.error(`Failed to invoke successfully: ${error}`);
