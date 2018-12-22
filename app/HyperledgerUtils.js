@@ -26,4 +26,70 @@ async function initClient( { FabricClient, fabricClient, storePath, userName } )
     return transactionId;
 }
 
+function checkTransactionProposalResponses(proposalResponses) {   
+    const isProposalGood = proposalResponses && proposalResponses[0].response && proposalResponses[0].response.status === 200;
+
+    if (isProposalGood) {
+        console.log('Transaction proposal was good');
+    } else {
+        console.error('Failed to send Proposal or receive valid response. Response null or status is not 200. exiting...');
+        throw new Error('Failed to send Proposal or receive valid response. Response null or status is not 200. exiting...');
+    }
+
+    console.log(`Successfully sent Proposal and received ProposalResponse:` +
+        `Status - ${proposalResponses[0].response.status},` +
+        `message - "${proposalResponses[0].response.message}"`
+    );
+}
+
+function commitTransaction(channel, transactionProposalResponses, transactionProposal) {
+    // build up the request for the orderer to have the transaction committed
+    const commitTransactionRequest = {
+        proposalResponses: transactionProposalResponses,
+        proposal: transactionProposal
+    };		
+
+    const commitTransactionPromise = channel.sendTransaction(commitTransactionRequest);
+    return commitTransactionPromise
+}
+
+function subscribeTxEventListener(channel, peer, transactionId) {
+    const txEventPromise = new Promise( (resolve, reject) => {
+
+        // get an eventhub once the fabric client has a user assigned. The user is required bacause the event registration must be signed
+        const eventHub = channel.newChannelEventHub(peer);
+        // transaction ID string used for event processing
+        const transaction_id_string = transactionId.getTransactionID();
+        
+        const timeoutHandle = setTimeout(() => {
+            eventHub.unregisterTxEvent(transaction_id_string);
+            eventHub.disconnect();
+            resolve({event_status : 'TIMEOUT'}); //we could use reject(new Error('Trnasaction did not complete within 30 seconds'));
+        }, 30000);
+
+        eventHub.registerTxEvent(transaction_id_string, (tx, code) => {
+            clearTimeout(timeoutHandle);
+            
+            if (code !== 'VALID')
+                console.error(`The transaction was invalid, code = ${code}`);
+            else
+                console.log(`The transaction has been committed on peer ${eventHub.getPeerAddr()}`);
+                
+            resolve( { event_status : code, tx_id : transaction_id_string } );
+
+        }, error => {
+            reject( new Error(`There was a problem with the eventhub: ${error}`) );
+        }, 
+        { disconnect: true } //disconnect when complete
+        );
+
+        eventHub.connect();
+    });
+
+    return txEventPromise;
+}
+
 module.exports.initClient = initClient;
+module.exports.checkTransactionProposalResponses = checkTransactionProposalResponses;
+module.exports.commitTransaction = commitTransaction;
+module.exports.subscribeTxEventListener = subscribeTxEventListener;
