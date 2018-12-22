@@ -1,12 +1,4 @@
 'use strict';
-/*
-* Copyright IBM Corp All Rights Reserved
-*
-* SPDX-License-Identifier: Apache-2.0
-*/
-/*
- * Enroll the admin user
- */
 
 const FabricClient = require('fabric-client');
 const FabricCAClient = require('fabric-ca-client');
