@@ -61,6 +61,6 @@ async function test() {
 	console.log(res)
 }
 
-test()
+// test()
 
 module.exports = Query

@@ -3,7 +3,6 @@
 const FabricClient = require('fabric-client');
 const path = require('path');
 const util = require('util');
-
 const HyperledgerUtils = require('./HyperledgerUtils');
 
 const fabricClient = new FabricClient();
@@ -18,14 +17,12 @@ const order = fabricClient.newOrderer('grpc://localhost:7050')
 channel.addOrderer(order);
 
 const storePath = path.join(__dirname, 'hfc-key-store');
-
 const userName = 'user1';
-let transactionId = null;
 
 async function Invoke() {
 	try {
 
-		transactionId = await HyperledgerUtils.initClient( { FabricClient,	fabricClient, storePath, userName } );
+		const transactionId = await HyperledgerUtils.initClient( { FabricClient, fabricClient, storePath, userName } );
 
 		const request = {
 			//targets: default to the peer assigned to the client
