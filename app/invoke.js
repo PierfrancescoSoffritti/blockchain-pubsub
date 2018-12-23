@@ -18,7 +18,7 @@ channel.addOrderer(order);
 
 const storePath = path.join(__dirname, 'hfc-key-store');
 
-async function Invoke(userName) {
+async function Invoke(userName, message) {
 	try {
 		if(!userName)
             throw new Error("Wrong arguments. User name is missing")
@@ -31,7 +31,7 @@ async function Invoke(userName) {
 			//targets: default to the peer assigned to the client
 			chaincodeId: 'IOchannel',
 			fcn: 'putMessage',
-			args: ['MSG4', 'newSenderId', 'message from outside'],
+			args: [message.id, userName, message.content],
 			chainId: 'mychannel',
 			txId: transactionId
 		};

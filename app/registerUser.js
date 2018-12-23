@@ -56,6 +56,7 @@ async function registerUser(userName) {
         await fabricClient.setUserContext(memberUser);
 
         console.log(`[registerUser] user ${userName} was successfully registered and enrolled and is ready to interact with the fabric network`);
+        return memberUser
 
     } catch(error) {
         console.error(`[registerUser] failed to register user ${userName}: ${error}`);
