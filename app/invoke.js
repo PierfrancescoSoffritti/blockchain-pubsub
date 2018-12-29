@@ -45,10 +45,11 @@ async function Invoke(userName, message) {
 		HyperledgerUtils.checkTransactionProposalResponses(transactionProposalResponses);
 		const commitTransactionResult = await HyperledgerUtils.commitTransaction(channel, transactionProposalResponses, transactionProposal);
 		
-		if (commitTransactionResult && commitTransactionResult.status === 'SUCCESS')
-			console.log('[invoke] successfully sent transaction to the orderer.');
-		else
+		if (commitTransactionResult && commitTransactionResult.status === 'SUCCESS') {
+			// console.log('[invoke] successfully sent transaction to the orderer.');
+		} else {
 			console.error(`[invoke] failed to order the transaction. Error code: ${commitTransactionResult.status}`);
+		}
 
 		const subsribeTxResult = await HyperledgerUtils.subscribeTxEventListener(channel, peer, transactionId);
 		
@@ -62,10 +63,10 @@ async function Invoke(userName, message) {
 	}
 }
 
-// async function test() {
-// 	await Invoke("user1");
-// }
+async function test() {
+	await Invoke("user2", { id: "MSG10-PK", content: "test" } );
+}
 
-// test()
+test()
 
 module.exports = Invoke

@@ -21,9 +21,9 @@ async function checkUserIsEnrolled(fabricClient, userName) {
     // get the enrolled user from persistence, this user will sign all requests
     const userFromStore = await fabricClient.getUserContext(userName, true);
 
-    if (userFromStore && userFromStore.isEnrolled())
-        console.log(`[utils] successfully loaded ${userName} from persistence`);
-    else
+    if (userFromStore && userFromStore.isEnrolled()) {
+        // console.log(`[utils] successfully loaded ${userName} from persistence`);
+    } else
         throw new Error(`Failed to get ${userName}... run registerUser.js`);
 }
 
@@ -31,16 +31,16 @@ function checkTransactionProposalResponses(proposalResponses) {
     const isProposalGood = proposalResponses && proposalResponses[0].response && proposalResponses[0].response.status === 200;
 
     if (isProposalGood) {
-        console.log('[utils] transaction proposal was good');
+        // console.log('[utils] transaction proposal was good');
     } else {
         console.error('[utils] failed to send Proposal or receive valid response. Response null or status is not 200. exiting...');
         throw new Error('Failed to send Proposal or receive valid response. Response null or status is not 200. exiting...');
     }
 
-    console.log(`[utils] successfully sent Proposal and received ProposalResponse:` +
-        `Status - ${proposalResponses[0].response.status},` +
-        `message - "${proposalResponses[0].response.message}"`
-    );
+    // console.log(`[utils] successfully sent Proposal and received ProposalResponse:` +
+    //     `Status - ${proposalResponses[0].response.status},` +
+    //     `message - "${proposalResponses[0].response.message}"`
+    // );
 }
 
 function commitTransaction(channel, transactionProposalResponses, transactionProposal) {
@@ -71,10 +71,11 @@ function subscribeTxEventListener(channel, peer, transactionId) {
         eventHub.registerTxEvent(transactionIdString, (tx, code) => {
             clearTimeout(timeoutHandle);
             
-            if (code !== 'VALID')
+            if (code !== 'VALID') {
                 console.error(`[utils] the transaction was invalid, code = ${code}`);
-            else
-                console.log(`[utils] the transaction has been committed on peer ${eventHub.getPeerAddr()}`);
+            } else {
+                // console.log(`[utils] the transaction has been committed on peer ${eventHub.getPeerAddr()}`);
+            }
                 
             resolve( { event_status: code, tx_id: transactionIdString } );
 

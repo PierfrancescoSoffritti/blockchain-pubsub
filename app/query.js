@@ -46,7 +46,7 @@ async function Query(userName, queryLowerBound, queryUpperBound) {
 				console.error(`[query] error from query: ${queryResponses[0]}`);
 			else {
 				const response = queryResponses[0].toString();
-				console.log(`[query] response is: ${response}`);
+				// console.log(`[query] response is: ${response}`);
 				return response;
 			}
 		} else {

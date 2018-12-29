@@ -27,7 +27,7 @@ async function onNewBlock(userName, newBlockListener) {
         const eventHub = channel.newChannelEventHub(peer)
         
         const blockReg = eventHub.registerBlockEvent( block => {
-            console.log('[BLOCKCHAIN LISTENER] block event successfully received')
+            // console.log('[BLOCKCHAIN LISTENER] block event successfully received')
             newBlockListener(block)
         }, error => {
             console.log(`[BLOCKCHAIN LISTENER] failed to receive block event: ${error}`)
