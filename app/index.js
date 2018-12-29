@@ -2,21 +2,21 @@ const EnrollAdmin = require('./enrollAdmin')
 const RegisterUser = require('./registerUser')
 const Query = require('./query')
 const Invoke = require('./invoke')
+const addNewBlockEventListener = require('./BlockchainListener')
 
 function BlockchainPubSub() {
+    const self = this
+
     const userName = "user2"
     let userPublicKey
-    let onNewMessage
+    let onNewMessage = () => {}
 
     let lastQueryMessageNumber = "MSG0"
 
-    // const blockchainListener = BlockchainListener(userName)
-    // blockchainListener.onNewBlock( async newBlock => { 
-    //     if(onNewMessage) {
-    //         const messages = await queryNewMessages(lastQueryMessageNumber)
-    //         messages.forEach( message => onNewMessage(message) )
-    //     }
-    // } )
+    async function newBlockReceived(newBlock) { 
+        const messages = await self.queryNewMessages(lastQueryMessageNumber)
+        messages.forEach( message => onNewMessage(message) )
+    }
 
     this.init = async function() {
         await EnrollAdmin("admin")
@@ -44,8 +44,11 @@ function BlockchainPubSub() {
         return await Query(userName, queryLowerBound, queryUpperBound)
     }
 
-    this.addMessageListener = function(messageListener) {
+    this.onNewMessage = async function(messageListener) {
         onNewMessage = messageListener
+        
+        const blockListenerConnection = await addNewBlockEventListener(userName, newBlockReceived)
+        return blockListenerConnection
     }
 
     this.queryNewMessages = async function(queryLowerBound = lastQueryMessageNumber) {

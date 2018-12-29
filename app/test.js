@@ -10,6 +10,9 @@ async function test() {
     const blockchain = new BlockchainPubSub()
     await blockchain.init()
 
+    const connection = await blockchain.onNewMessage(message => console.log(`[TEST] new message: ${JSON.stringify(message)}`))
+    setTimeout( () => connection.disconnect(), 8000)
+
     console.log("\n")
 
     await blockchain.query("MSG0", "MSG999")
