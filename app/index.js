@@ -4,25 +4,30 @@ const Query = require('./query')
 const Invoke = require('./invoke')
 
 function BlockchainPubSub() {
-    const userName = "user1"
+    const userName = "user2"
     let userPublicKey
     let onNewMessage
 
     let lastQueryMessageNumber = "MSG0"
 
-    const blockchainListener = BlockchainListener(userName)
-    blockchainListener.onNewBlock( async newBlock => { 
-        if(onNewMessage) {
-            const messages = await queryNewMessages(lastQueryMessageNumber)
-            messages.forEach( message => onNewMessage(message) )
-        }
-    } )
+    // const blockchainListener = BlockchainListener(userName)
+    // blockchainListener.onNewBlock( async newBlock => { 
+    //     if(onNewMessage) {
+    //         const messages = await queryNewMessages(lastQueryMessageNumber)
+    //         messages.forEach( message => onNewMessage(message) )
+    //     }
+    // } )
 
     this.init = async function() {
         await EnrollAdmin("admin")
         const user = await RegisterUser(userName)
         
-        userPublicKey = user.getIdentity()._publicKey._key.pubKeyHex
+        // only for debug
+        if(user)
+            userPublicKey = user.getIdentity()._publicKey._key.pubKeyHex
+        else
+            userPublicKey = `${userName}_publicKey`
+
         initDone = true
     }
 
@@ -43,14 +48,15 @@ function BlockchainPubSub() {
         onNewMessage = messageListener
     }
 
-    async function queryNewMessages(queryLowerBound) {
+    this.queryNewMessages = async function(queryLowerBound = lastQueryMessageNumber) {
         /*
         response format:  [ {"Key": "MSG0-publicKey", "Record": { "content": "message content", "senderId": "testSender" } } ]
         */
        
         const queryUpperBound = "MSG" +( Number(queryLowerBound.split("MSG")[0]) + 999 )
 
-        const response = await Query(userName, queryLowerBound, queryUpperBound)
+        const stringResponse = await Query(userName, queryLowerBound, queryUpperBound)
+        const response = JSON.parse(stringResponse)
         const messages = response.map( r => r["Record"] )
 
         const lastKey = response[response.length-1]["Key"]
@@ -59,3 +65,5 @@ function BlockchainPubSub() {
         return messages
     }
 }
+
+module.exports = BlockchainPubSub

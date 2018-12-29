@@ -39,17 +39,17 @@ let Chaincode = class {
   async initLedger(stub, args) {
     console.info('============= start initLedger ===========');
     
-    const messages = [
-      {
-        senderId: 'testSender',
-        content: 'This is a test message'
-      }
-    ];
+    // const messages = [
+    //   {
+    //     senderId: 'testSender',
+    //     content: 'This is a test message'
+    //   }
+    // ];
 
-    for(let i=0; i<messages.length; i++) {
-      await stub.putState(`MSG${i}`, Buffer.from(JSON.stringify(messages[i])));
-      console.info(`Added:  ${messages[i]}`);
-    }
+    // for(let i=0; i<messages.length; i++) {
+    //   await stub.putState(`MSG${i}`, Buffer.from(JSON.stringify(messages[i])));
+    //   console.info(`Added:  ${messages[i]}`);
+    // }
 
     console.info('============= finish initLedger ===========');
   }
