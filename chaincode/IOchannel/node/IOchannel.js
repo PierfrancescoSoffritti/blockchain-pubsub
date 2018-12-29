@@ -90,8 +90,8 @@ let Chaincode = class {
   async queryAllMessages(stub, args) {
     console.info('============= start queryAllMessages ===========');
 
-    const startKey = 'MSG0';
-    const endKey = 'MSG999';
+    const startKey = args[0];
+    const endKey = args[1];
 
     const iterator = await stub.getStateByRange(startKey, endKey);
 

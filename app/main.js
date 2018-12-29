@@ -16,7 +16,7 @@ async function main() {
 
     await sendMessage(userName, {id: `MSG1-${userPK}`, content: "0"})
     
-    await Query(userName)
+    await Query(userName, "MSG0", "MSG999")
     
     console.log("done")
 }

@@ -14,7 +14,7 @@ channel.addPeer(peer);
 
 const storePath = path.join(__dirname, 'hfc-key-store');
 
-async function Query(userName) {
+async function Query(userName, queryLowerBound, queryUpperBound) {
 	try {
 		if(!userName)
             throw new Error("Wrong arguments. User name is missing")
@@ -26,7 +26,7 @@ async function Query(userName) {
 			//targets : default to the peer assigned to the client
 			chaincodeId: 'IOchannel',
 			fcn: 'queryAllMessages',
-			args: ['']
+			args: [queryLowerBound, queryUpperBound]
 		};
 
 		// send the transaction proposal to the peers for endorsment
@@ -56,7 +56,7 @@ async function Query(userName) {
 }
 
 // async function test() {
-// 	const res = await Query("user1");
+// 	const res = await Query("user1", "MSG0", "MSG999");
 // 	console.log("--")
 // 	console.log(res)
 // }
