@@ -55,6 +55,8 @@ function BlockchainPubSub() {
         /*
         response format:  [ {"Key": "MSG0-publicKey", "Record": { "content": "message content", "senderId": "testSender" } } ]
         */
+
+        console.log(queryLowerBound)
        
         const queryUpperBound = "MSG" +( Number(queryLowerBound.split("MSG")[0]) + 999 )
 

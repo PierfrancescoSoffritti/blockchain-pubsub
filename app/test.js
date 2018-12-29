@@ -23,10 +23,10 @@ async function test() {
 
     console.log("\n")
 
-    // await blockchain.query("MSG0", "MSG999")
+    await blockchain.query("MSG0", "MSG999")
     
-    const messages = await blockchain.queryNewMessages()
-    messages.forEach( m => console.log(`\n ${m.content}`))
+    // const messages = await blockchain.queryNewMessages()
+    // messages.forEach( m => console.log(`\n ${m.content}`))
 }
 
 test()
