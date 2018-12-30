@@ -1,71 +1,38 @@
-const EnrollAdmin = require('./enrollAdmin')
-const RegisterUser = require('./registerUser')
-const Query = require('./query')
-const Invoke = require('./invoke')
-const addNewBlockEventListener = require('./BlockchainListener')
 const MessageIdGenerator = require('./MessageIdGenerator')
 
-function BlockchainPubSub() {
+function BlockchainPubSub(hubId, blockchain) {
     const self = this
 
-    const userName = "user2"
-    let initCompleted = false;
-    let userPublicKey
     let onNewMessage = () => {}
 
     let lastSentMessageId = "MSG0"
     let lastQueryMessageId = "MSG0"
 
-    async function newBlockReceived(newBlock) { 
+    async function onNewBlockReceived(newBlock) { 
         const messages = await self.queryNewMessages(lastQueryMessageId)
         messages.forEach( message => onNewMessage(message) )
     }
 
-    this.init = async function() {
-        await EnrollAdmin("admin")
-        const user = await RegisterUser(userName)
-        
-        // only for debug
-        // if(user)
-        //     userPublicKey = user.getIdentity()._publicKey._key.pubKeyHex
-        // else
-            userPublicKey = `${userName}_publicKey`
-
-        initCompleted = true
-    }
-
-    this.sendMessage = async function(message) {
-        if(!initCompleted)
-            throw "Init not completed"
-        
+    this.sendMessage = async function(message) {        
         const newMessageId = MessageIdGenerator.nextMessageId(lastSentMessageId)
         console.log("[INDEX] sendMessage, id: " +newMessageId)
         lastSentMessageId = newMessageId;
 
-        await Invoke(userName, {id: `${newMessageId}-${userPublicKey}`, content: message})
+        await blockchain.invoke( { id: `${newMessageId}-${hubId}`, content: message } )
     }
 
     this.query = async function(queryLowerBound, queryUpperBound) {
-        if(!initCompleted)
-            throw "Init not completed"
-
-        return await Query(userName, queryLowerBound, queryUpperBound)
+        return await blockchain.query(queryLowerBound, queryUpperBound)
     }
 
     this.onNewMessage = async function(messageListener) {
-        if(!initCompleted)
-            throw "Init not completed"
-
         onNewMessage = messageListener
         
-        const blockListenerConnection = await addNewBlockEventListener(userName, newBlockReceived)
+        const blockListenerConnection = await blockchain.addNewBlockEventListener(onNewBlockReceived)
         return blockListenerConnection
     }
 
     this.queryNewMessages = async function(queryLowerBound = lastQueryMessageId) {
-        if(!initCompleted)
-            throw "Init not completed"
-
         /*
         response format:  [ {"Key": "MSG0-publicKey", "Record": { "content": "message content", "senderId": "testSender" } } ]
         */
@@ -75,7 +42,7 @@ function BlockchainPubSub() {
         console.log("[INDEX] queryNewMessages lower bound: " +queryLowerBound)
         console.log("[INDEX] queryNewMessages upper bound: " +queryUpperBound +"\n")
 
-        const stringResponse = await Query(userName, queryLowerBound, queryUpperBound)
+        const stringResponse = await blockchain.query(queryLowerBound, queryUpperBound)
         const response = JSON.parse(stringResponse)
 
         console.log(`[INDEX] response.length: ${response.length}`)
