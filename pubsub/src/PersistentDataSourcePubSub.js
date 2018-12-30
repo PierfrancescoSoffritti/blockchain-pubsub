@@ -27,10 +27,7 @@ function PersistentDataSourcePubSub(hubId, persistentDataSource) {
 
     async function queryNewMessages(queryLowerBound = lastQueryMessageId) {       
         const queryUpperBound = MessageIdGenerator.addOffset(queryLowerBound, 5)
-
-        // console.log("[INDEX] queryNewMessages lower bound: " +queryLowerBound)
-        // console.log("[INDEX] queryNewMessages upper bound: " +queryUpperBound +"\n")
-
+        
         const response = await persistentDataSource.queryRange(queryLowerBound, queryUpperBound)
 
         if(response.length === 0)
