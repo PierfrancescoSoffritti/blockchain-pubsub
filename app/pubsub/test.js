@@ -12,24 +12,22 @@ async function test() {
     const connection = await blockchainPubSub.onNewMessage(message => console.log(`[TEST] new message received: ${JSON.stringify(message)}`))
     // setTimeout( () => connection.disconnect(), 8000)
 
-    console.log("\n")
-
     await wait(5000)
-
     console.log("\n")
 
     await blockchainPubSub.sendMessage("message #1")
 
     await wait(5000)
-
     console.log("\n")
 
     await blockchainPubSub.sendMessage("message #2")
 
     await wait(5000)
+    console.log("\n")
 
     await blockchainPubSub.sendMessage("message #3")
 
+    await wait(5000)
     console.log("\n")
 
     // await blockchain.query("MSG0", "MSG999")
