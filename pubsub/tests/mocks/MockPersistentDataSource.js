@@ -19,16 +19,22 @@ function MockPersistentDataSource() {
         const queryUpperBoundNumber = Number(queryUpperBound.replace("MSG", ""))
 
         const keys = Object.keys(data)
-            .map(key => Number(key.replace("MSG", "")))
-            .filter(key => ( key >= queryLowerBoundNumber && key <= queryUpperBoundNumber ) )
+            .map(key => { return { key, number: Number( key.replace("MSG", "").split("-")[0] ) } } )
+            .filter(key => ( key.number >= queryLowerBoundNumber && key.number <= queryUpperBoundNumber ) )
+            .map( key => key.key)
+        
         const result = []
-        keys.forEach(key => result.push( { id: `MSG${key}`, content: data[`MSG${key}`] } ))
+        keys.forEach(key => result.push( { id: key, content: data[key] } ))
         
         return result
     }
 
     this.onDataPersisted = async function(onDataPersistedListener) {
         onNewDataPersisted = onDataPersistedListener
+    }
+
+    this.getDataArray = function(){
+        return Object.keys(data).map(key => { return { id: key, content: data[key] } } );
     }
 }
 

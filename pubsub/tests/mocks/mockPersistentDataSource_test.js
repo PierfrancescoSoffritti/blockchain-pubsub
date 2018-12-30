@@ -87,6 +87,27 @@ describe('queryRange', () => {
         expect(res[1].id).to.be.equal("MSG1")
         expect(res[1].content).to.be.equal("message #3")
     })
+
+    it('complex id test', async () => {
+        
+        // 1. ARRANGE
+        const datasource = new MockPersistentDataSource()
+        datasource.data["MSG0-1"] = "message #1"
+        datasource.data["MSG0-2"] = "message #2"
+        datasource.data["MSG1-1"] = "message #3"
+
+        // 2. ACT
+        const res = await datasource.queryRange("MSG0", "MSG99")
+
+        // 3. ASSERT
+        expect(res.length).to.be.equal(3)
+        expect(res[0].id).to.be.equal("MSG0-1")
+        expect(res[0].content).to.be.equal("message #1")
+        expect(res[1].id).to.be.equal("MSG0-2")
+        expect(res[1].content).to.be.equal("message #2")
+        expect(res[2].id).to.be.equal("MSG1-1")
+        expect(res[2].content).to.be.equal("message #3")
+    })
 })
 
 describe('onDataPersisted', () => {
@@ -139,5 +160,21 @@ describe('onDataPersisted', () => {
         datasource.persist({ id: "MSG0", content: "message #1" })
         datasource.persist({ id: "MSG1", content: "message #2" })
         datasource.persist({ id: "MSG2", content: "message #3" })
+    })
+})
+
+describe('getDataArray', () => {
+    it('basic test', async () => {
+        
+        // 1. ARRANGE
+        const datasource = new MockPersistentDataSource()
+
+        // 2. ACT
+        await datasource.persist({ id: "MSG0", content: "message #1" })
+
+        // 3. ASSERT
+        expect(datasource.getDataArray().length).to.be.equal(1)
+        expect(datasource.getDataArray()[0].id).to.be.equal("MSG0")
+        expect(datasource.getDataArray()[0].content).to.be.equal("message #1")
     })
 })
