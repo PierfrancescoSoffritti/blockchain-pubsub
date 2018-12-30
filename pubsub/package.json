@@ -4,10 +4,11 @@
     "description": "pubsub module",
     "main": "index.js",
     "scripts": {
-        "test": "mocha tests"
+        "test": "find ./tests -name '*_test.js' | xargs mocha -R spec"
     },
     "devDependencies": {
         "chai": "^4.2.0",
-        "mocha": "^5.2.0"
+        "mocha": "^5.2.0",
+        "sinon": "^7.2.2"
     }
 }

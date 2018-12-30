@@ -1,38 +1,32 @@
 const MessageIdGenerator = require('./MessageIdGenerator')
 
-function BlockchainPubSub(hubId, blockchain) {
-    const self = this
-
+function PersistentDataSourcePubSub(hubId, persistentDataSource) {
     let onNewMessage = () => {}
 
     let lastSentMessageId = "MSG0"
     let lastQueryMessageId = "MSG0"
-
-    async function onNewBlockReceived(newBlock) { 
-        const messages = await self.queryNewMessages(lastQueryMessageId)
-        messages.forEach( message => onNewMessage(message) )
-    }
 
     this.sendMessage = async function(message) {        
         const newMessageId = MessageIdGenerator.nextMessageId(lastSentMessageId)
         console.log("[INDEX] sendMessage, id: " +newMessageId)
         lastSentMessageId = newMessageId;
 
-        await blockchain.invoke( { id: `${newMessageId}-${hubId}`, content: message } )
-    }
-
-    this.query = async function(queryLowerBound, queryUpperBound) {
-        return await blockchain.query(queryLowerBound, queryUpperBound)
+        await persistentDataSource.persist( { id: `${newMessageId}-${hubId}`, content: message } )
     }
 
     this.onNewMessage = async function(messageListener) {
         onNewMessage = messageListener
         
-        const blockListenerConnection = await blockchain.addNewBlockEventListener(onNewBlockReceived)
-        return blockListenerConnection
+        const listenerConnection = await persistentDataSource.onData(onNewPersistentDataAvailable)
+        return listenerConnection
     }
 
-    this.queryNewMessages = async function(queryLowerBound = lastQueryMessageId) {
+    async function onNewPersistentDataAvailable() { 
+        const messages = await queryNewMessages(lastQueryMessageId)
+        messages.forEach( message => onNewMessage(message) )
+    }
+
+    async function queryNewMessages(queryLowerBound = lastQueryMessageId) {
         /*
         response format:  [ {"Key": "MSG0-publicKey", "Record": { "content": "message content", "senderId": "testSender" } } ]
         */
@@ -42,7 +36,7 @@ function BlockchainPubSub(hubId, blockchain) {
         console.log("[INDEX] queryNewMessages lower bound: " +queryLowerBound)
         console.log("[INDEX] queryNewMessages upper bound: " +queryUpperBound +"\n")
 
-        const stringResponse = await blockchain.query(queryLowerBound, queryUpperBound)
+        const stringResponse = await persistentDataSource.queryRange(queryLowerBound, queryUpperBound)
         const response = JSON.parse(stringResponse)
 
         console.log(`[INDEX] response.length: ${response.length}`)
@@ -62,4 +56,4 @@ function BlockchainPubSub(hubId, blockchain) {
     }
 }
 
-module.exports = BlockchainPubSub
+module.exports = PersistentDataSourcePubSub
