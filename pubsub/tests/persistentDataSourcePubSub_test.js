@@ -83,7 +83,7 @@ describe('onNewMessage', () => {
 
         // 3. ASSERT
         await wait(6)
-        expect(onNewMessage.calledOnce).to.be.true;
+        expect(onNewMessage.calledOnce).to.be.true
     })
 
     it('correct message is passed as argument test', async () => {
@@ -126,6 +126,65 @@ describe('onNewMessage', () => {
 
         // 3. ASSERT
         await wait(6)
-        expect(callback.returnValues).to.have.ordered.members([1, 2, 3]);
+        expect(callback.returnValues).to.have.ordered.members([1, 2, 3])
+    })
+
+    it('only new data is emitted test', async () => {
+        // 1. ARRANGE
+        const pubsubId = 1
+        const persistentData = new MockPersistentDataSource()
+        const pubsub = new PersistentDataSourcePubSub(pubsubId, persistentData)
+
+        for(let i=0; i<5; i++) {
+            // 1. ARRANGE
+            let callback = sinon.stub()
+            callback.withArgs("message #0").returns(0)
+            callback.withArgs("message #1").returns(1)
+            callback.withArgs("message #2").returns(2)
+            callback.withArgs(`message #${i}`).returns(i)
+            callback.returns(0)
+            pubsub.onNewMessage(callback)
+
+            // 2. ACT
+            await pubsub.sendMessage(`message #${i}`)
+
+            // 3. ASSERT
+            await wait(6)
+            expect(callback.calledOnce).to.be.true
+            expect(callback.returnValues).to.have.ordered.members([i])
+        }
+
+        expect(persistentData.getDataArray().length).to.be.equal(5)
+    })
+
+    it('only new data is emitted (two publishers) test', async () => {
+        // 1. ARRANGE
+        const pubsubId1 = 1
+        const pubsubId2 = 2
+        const persistentData = new MockPersistentDataSource()
+        const pubsub1 = new PersistentDataSourcePubSub(pubsubId1, persistentData)
+        const pubsub2 = new PersistentDataSourcePubSub(pubsubId2, persistentData)
+
+        for(let i=0; i<5; i++) {
+            // 1. ARRANGE
+            let callback = sinon.stub()
+            callback.withArgs("message #0").returns(0)
+            callback.withArgs("message #1").returns(1)
+            callback.withArgs("message #2").returns(2)
+            callback.withArgs(`message #${i}`).returns(i)
+            callback.returns(0)
+            pubsub1.onNewMessage(callback)
+
+            // 2. ACT
+            await pubsub1.sendMessage(`message #${i}`)
+            await pubsub2.sendMessage(`message #${i}`)
+
+            // 3. ASSERT
+            await wait(6)
+            expect(callback.calledTwice).to.be.true
+            expect(callback.returnValues).to.have.ordered.members([i, i])
+        }
+
+        expect(persistentData.getDataArray().length).to.be.equal(10)
     })
 })

@@ -1,3 +1,3 @@
-const BlockchainPubSub = require('./src/BlockchainPubSub')
+const PersistentDataSourcePubSub = require('./src/PersistentDataSourcePubSub')
 
-module.exports = BlockchainPubSub
+module.exports = PersistentDataSourcePubSub

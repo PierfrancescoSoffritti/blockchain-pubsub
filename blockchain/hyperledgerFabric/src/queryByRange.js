@@ -25,7 +25,7 @@ async function Query(userName, queryLowerBound, queryUpperBound) {
 		const request = {
 			//targets : default to the peer assigned to the client
 			chaincodeId: 'IOchannel',
-			fcn: 'queryAllMessages',
+			fcn: 'queryAllMessagesByRange',
 			args: [queryLowerBound, queryUpperBound]
 		};
 

@@ -26,6 +26,9 @@ async function test() {
     console.log("\n")
 
     await blockchainPubSub.sendMessage("message #3")
+    await blockchainPubSub.sendMessage("message #4")
+    await blockchainPubSub.sendMessage("message #5")
+    await blockchainPubSub.sendMessage("message #6")
 
     await wait(5000)
     console.log("\n")

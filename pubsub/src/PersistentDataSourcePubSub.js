@@ -25,27 +25,17 @@ function PersistentDataSourcePubSub(hubId, persistentDataSource) {
         messages.forEach( message => onNewMessage(message) )
     }
 
-    async function queryNewMessages(queryLowerBound = lastQueryMessageId) {
-        /*
-        response format:  [ {"Key": "MSG0-publicKey", "Record": { "content": "message content", "senderId": "testSender" } } ]
-        */
-       
-        const queryUpperBound = MessageIdGenerator.addOffset(queryLowerBound, 999)
+    async function queryNewMessages(queryLowerBound = lastQueryMessageId) {       
+        const queryUpperBound = MessageIdGenerator.addOffset(queryLowerBound, 5)
 
         // console.log("[INDEX] queryNewMessages lower bound: " +queryLowerBound)
         // console.log("[INDEX] queryNewMessages upper bound: " +queryUpperBound +"\n")
 
         const response = await persistentDataSource.queryRange(queryLowerBound, queryUpperBound)
-        // const response = JSON.parse(stringResponse)
 
-        // console.log(`[INDEX] response.length: ${response.length}`)
         if(response.length === 0)
             return []
 
-        // const messages = response
-        //     .sort( (r1, r2) => MessageIdGenerator.compare(r1["Key"].split('-')[0], r2["Key"].split('-')[0]))
-        //     .map( r => { console.log("[INDEX] queryNewMessages key: " +r["Key"]); return r } )
-        //     .map( r => r["Record"] )
         const messages = response
             .sort( (r1, r2) => MessageIdGenerator.compare(r1.id.split('-')[0], r2.id.split('-')[0]))
             .map( object => object.content )

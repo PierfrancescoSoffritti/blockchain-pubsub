@@ -1,6 +1,6 @@
 const EnrollAdmin = require('./src/enrollAdmin')
 const RegisterUser = require('./src/registerUser')
-const Query = require('./src/query')
+const QueryByRange = require('./src/queryByRange')
 const Invoke = require('./src/invoke')
 const AddNewBlockEventListener = require('./src/BlockchainListener')
 
@@ -24,25 +24,36 @@ async function init(adminUserName, userName) {
     return userPublicKey
 }
 
-async function query(queryLowerBound, queryUpperBound) {
+async function queryRange(queryLowerBound, queryUpperBound) {
     if(!isInitCompleted)
         throw "Init not completed"
 
-    return await Query(registeredUserName, queryLowerBound, queryUpperBound)
+    const res = await QueryByRange(registeredUserName, queryLowerBound, queryUpperBound)
+    return parseQueryResult(res)
 }
 
-async function invoke(message) {
+async function persist(message) {
     if(!isInitCompleted)
         throw "Init not completed"
 
     return await Invoke(registeredUserName, message)
 }
 
-async function addNewBlockEventListener(onNewBlockReceived) {
+async function onDataPersisted(onDataPersistedListener) {
     if(!isInitCompleted)
         throw "Init not completed"
         
-    return await AddNewBlockEventListener(registeredUserName, onNewBlockReceived)
+    return await AddNewBlockEventListener(registeredUserName, onDataPersistedListener)
 }
 
-module.exports = { init, query, invoke, addNewBlockEventListener }
+function parseQueryResult(response) {
+    /*
+        original response format:  [ { "Key": "..", "Record": { .. } } ]
+        final response format: [ { id: "..", content: { .. } } ]
+    */
+
+   const parsedData = JSON.parse(response).map( data => { return { id: data["Key"], content: data["Record"] } } )
+   return parsedData
+}
+
+module.exports = { init, queryRange, persist, onDataPersisted }
