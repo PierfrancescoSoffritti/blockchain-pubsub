@@ -1,0 +1,13 @@
+{
+    "name": "pubsub",
+    "version": "1.0.0",
+    "description": "pubsub module",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "startFabric": "./node_modules/blockchain-pubsub-hyperledger-fabric-interface/startFabric.sh node"
+    },
+    "dependencies": {
+        "blockchain-pubsub-hyperledger-fabric-interface": "file:../blockchain/hyperledgerFabric"
+    }
+}

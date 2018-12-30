@@ -1,8 +1,8 @@
-const EnrollAdmin = require('./enrollAdmin')
-const RegisterUser = require('./registerUser')
-const Query = require('./query')
-const Invoke = require('./invoke')
-const AddNewBlockEventListener = require('./BlockchainListener')
+const EnrollAdmin = require('./src/enrollAdmin')
+const RegisterUser = require('./src/registerUser')
+const Query = require('./src/query')
+const Invoke = require('./src/invoke')
+const AddNewBlockEventListener = require('./src/BlockchainListener')
 
 let isInitCompleted = false
 let registeredUserName

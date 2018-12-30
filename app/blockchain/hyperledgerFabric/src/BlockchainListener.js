@@ -2,7 +2,7 @@
 
 const FabricClient = require('fabric-client');
 const path = require('path');
-const HyperledgerUtils = require('./HyperledgerUtils');
+const HyperledgerUtils = require('./utils');
 
 const fabricClient = new FabricClient();
 
@@ -15,7 +15,7 @@ channel.addPeer(peer);
 const order = fabricClient.newOrderer('grpc://localhost:7050')
 channel.addOrderer(order);
 
-const storePath = path.join(__dirname, 'hfc-key-store');
+const storePath = path.join(__dirname, '/../hfc-key-store');
 
 async function onNewBlock(userName, newBlockListener) {
     try {

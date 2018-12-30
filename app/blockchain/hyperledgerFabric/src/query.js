@@ -3,7 +3,7 @@
 const FabricClient = require('fabric-client');
 const path = require('path');
 
-const HyperledgerUtils = require('./HyperledgerUtils');
+const HyperledgerUtils = require('./utils');
 
 const fabricClient = new FabricClient();
 
@@ -12,7 +12,7 @@ const channel = fabricClient.newChannel('mychannel');
 const peer = fabricClient.newPeer('grpc://localhost:7051');
 channel.addPeer(peer);
 
-const storePath = path.join(__dirname, 'hfc-key-store');
+const storePath = path.join(__dirname, '/../hfc-key-store');
 
 async function Query(userName, queryLowerBound, queryUpperBound) {
 	try {

@@ -2,11 +2,11 @@
 
 const FabricClient = require('fabric-client');
 const FabricCAClient = require('fabric-ca-client');
-const HyperledgerUtils = require('./HyperledgerUtils');
+const HyperledgerUtils = require('./utils');
 const path = require('path');
 
 const fabricClient = new FabricClient();
-const storePath = path.join(__dirname, 'hfc-key-store');
+const storePath = path.join(__dirname, '/../hfc-key-store');
 
 async function enrollAdmin(adminUserName) {
     try {

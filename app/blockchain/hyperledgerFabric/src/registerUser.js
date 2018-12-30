@@ -1,20 +1,12 @@
 'use strict';
-/*
-* Copyright IBM Corp All Rights Reserved
-*
-* SPDX-License-Identifier: Apache-2.0
-*/
-/*
- * Register and Enroll a user
- */
 
 const FabricClient = require('fabric-client');
 const FabricCAClient = require('fabric-ca-client');
-const HyperledgerUtils = require('./HyperledgerUtils');
+const HyperledgerUtils = require('./utils');
 const path = require('path');
 
 const fabricClient = new FabricClient();
-const storePath = path.join(__dirname, 'hfc-key-store');
+const storePath = path.join(__dirname, '/../hfc-key-store');
 
 async function registerUser(userName) {
     try {

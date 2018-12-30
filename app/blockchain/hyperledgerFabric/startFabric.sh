@@ -7,6 +7,10 @@
 # Exit on first error
 set -e
 
+# move to script directory
+DIRECTORY=`dirname $0`
+cd $DIRECTORY
+
 # don't rewrite paths for Windows Git Bash users
 export MSYS_NO_PATHCONV=1
 starttime=$(date +%s)

@@ -1,4 +1,4 @@
-const hyperledgerFabric = require('./blockchain/hyperledgerFabric')
+const hyperledgerFabric = require('../blockchain/hyperledgerFabric')
 const BlockchainPubSub = require('./index')
 
 async function test() {
