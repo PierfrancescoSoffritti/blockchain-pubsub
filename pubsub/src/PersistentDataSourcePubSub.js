@@ -3,8 +3,8 @@ const MessageIdGenerator = require('./MessageIdGenerator')
 function PersistentDataSourcePubSub(hubId, persistentDataSource) {
     let onNewMessage = () => {}
 
-    let lastSentMessageId = "MSG-1"
-    let lastQueryMessageId = "MSG-1"
+    let lastSentMessageId = "MSG0"
+    let lastQueryMessageId = "MSG0"
 
     this.sendMessage = async function(message) {        
         const newMessageId = MessageIdGenerator.nextMessageId(lastSentMessageId)
@@ -26,7 +26,7 @@ function PersistentDataSourcePubSub(hubId, persistentDataSource) {
     }
 
     async function queryNewMessages(queryLowerBound = lastQueryMessageId) {       
-        const queryUpperBound = MessageIdGenerator.addOffset(queryLowerBound, 5)
+        const queryUpperBound = MessageIdGenerator.addOffset(queryLowerBound, 10)
         
         const response = await persistentDataSource.queryRange(queryLowerBound, queryUpperBound)
 

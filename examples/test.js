@@ -7,22 +7,22 @@ async function test() {
 
     const blockchainPubSub = new BlockchainPubSub(hubId, hyperledgerFabric)
 
-    await wait(5000)
+    await wait(2000)
 
     const connection = await blockchainPubSub.onNewMessage(message => console.log(`[TEST] new message received: ${JSON.stringify(message)}`))
     // setTimeout( () => connection.disconnect(), 8000)
 
-    await wait(5000)
+    await wait(2000)
     console.log("\n")
 
     await blockchainPubSub.sendMessage("message #1")
 
-    await wait(5000)
+    await wait(2000)
     console.log("\n")
 
     await blockchainPubSub.sendMessage("message #2")
 
-    await wait(5000)
+    await wait(2000)
     console.log("\n")
 
     await blockchainPubSub.sendMessage("message #3")
@@ -30,7 +30,7 @@ async function test() {
     await blockchainPubSub.sendMessage("message #5")
     await blockchainPubSub.sendMessage("message #6")
 
-    await wait(5000)
+    await wait(2000)
     console.log("\n")
 
     // await blockchain.query("MSG0", "MSG999")

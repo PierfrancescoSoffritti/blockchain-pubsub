@@ -1,255 +1,279 @@
 const expect = require('chai').expect
 const MessageIdGenerator = require('../src/MessageIdGenerator')
 
-describe('nextMessageId', () => {
-    it('base test', () => {
+describe("MessageIdGenerator", () => {
+    describe('nextMessageId', () => {
+        it('base test', () => {
+            
+            // 1. ARRANGE
+            const currMsg = "MSG0"
+
+            // 2. ACT
+            const nextMsg = MessageIdGenerator.nextMessageId(currMsg)
+
+            // 3. ASSERT
+            expect(nextMsg).to.be.equal("MSG1")
+        })
+
+        it('add digit test', () => {
+            
+            // 1. ARRANGE
+            const currMsg = "MSG9"
+
+            // 2. ACT
+            const nextMsg = MessageIdGenerator.nextMessageId(currMsg)
+
+            // 3. ASSERT
+            expect(nextMsg).to.be.equal("MSG90")
+        })
+
+        it('negative number test', () => {
         
-        // 1. ARRANGE
-        const currMsg = "MSG0"
+            // 1. ARRANGE
+            const currMsg = "MSG-1"
 
-        // 2. ACT
-        const nextMsg = MessageIdGenerator.nextMessageId(currMsg)
+            // 2. ACT
+            // 3. ASSERT
+            expect( () => MessageIdGenerator.nextMessageId(currMsg) ).to.throw()
+        })
 
-        // 3. ASSERT
-        expect(nextMsg).to.be.equal("MSG1")
-    })
-
-    it('negative number test', () => {
-    
-        // 1. ARRANGE
-        const currMsg = "MSG-1"
-
-        // 2. ACT
-        const nextMsg = MessageIdGenerator.nextMessageId(currMsg)
-
-        // 3. ASSERT
-        expect(nextMsg).to.be.equal("MSG0")
-    })
-
-    it('wrong message format (MSG string malformed) test', () => {
-    
-        // 1. ARRANGE
-        const currMsg = "MS0"
-
-        // 2. ACT
-        // 3. ASSERT
-        expect( () => MessageIdGenerator.nextMessageId(currMsg) ).to.throw();
-    })
-
-    it('wrong message format (missing number) test', () => {
-    
-        // 1. ARRANGE
-        const currMsg = "MSG"
-
-        // 2. ACT
-        // 3. ASSERT
-        expect( () => MessageIdGenerator.nextMessageId(currMsg) ).to.throw();
-    })
-
-    it('wrong message format (extra data after number) test', () => {
-    
-        // 1. ARRANGE
-        const currMsg = "MSG0-extradata"
-
-        // 2. ACT
-        // 3. ASSERT
-        expect( () => MessageIdGenerator.nextMessageId(currMsg) ).to.throw();
-    })
-
-    it('wrong message format (not a number) test', () => {
-    
-        // 1. ARRANGE
-        const currMsg = "MSG0a"
-
-        // 2. ACT
-        // 3. ASSERT
-        expect( () => MessageIdGenerator.nextMessageId(currMsg) ).to.throw();
-    })
-})
-
-describe('addOffset', () => {
-    it('base test', () => {
+        it('wrong message format (MSG string malformed) test', () => {
         
-        // 1. ARRANGE
-        const currMsg = "MSG0"
-  
-        // 2. ACT
-        const nextMsg = MessageIdGenerator.addOffset(currMsg, 1)
-  
-        // 3. ASSERT
-        expect(nextMsg).to.be.equal("MSG1")
-    })
+            // 1. ARRANGE
+            const currMsg = "MS0"
 
-    it('big offest test', () => {
+            // 2. ACT
+            // 3. ASSERT
+            expect( () => MessageIdGenerator.nextMessageId(currMsg) ).to.throw();
+        })
+
+        it('wrong message format (missing number) test', () => {
         
-        // 1. ARRANGE
-        const currMsg = "MSG0"
-    
-        // 2. ACT
-        const nextMsg = MessageIdGenerator.addOffset(currMsg, 9999)
-    
-        // 3. ASSERT
-        expect(nextMsg).to.be.equal("MSG9999")
-    })
-  
-    it('negative offset positive number test', () => {
-      
-        // 1. ARRANGE
-        const currMsg = "MSG1"
-  
-        // 2. ACT
-        const nextMsg = MessageIdGenerator.addOffset(currMsg, -1)
-  
-        // 3. ASSERT
-        expect(nextMsg).to.be.equal("MSG0")
-    })
+            // 1. ARRANGE
+            const currMsg = "MSG"
 
-    it('negative offset negative number test', () => {
-      
-        // 1. ARRANGE
-        const currMsg = "MSG-1"
-  
-        // 2. ACT
-        const nextMsg = MessageIdGenerator.addOffset(currMsg, -1)
-  
-        // 3. ASSERT
-        expect(nextMsg).to.be.equal("MSG-2")
-    })
+            // 2. ACT
+            // 3. ASSERT
+            expect( () => MessageIdGenerator.nextMessageId(currMsg) ).to.throw();
+        })
 
-    it('positive offset negative number test', () => {
-      
-        // 1. ARRANGE
-        const currMsg = "MSG-1"
-  
-        // 2. ACT
-        const nextMsg = MessageIdGenerator.addOffset(currMsg, 1)
-  
-        // 3. ASSERT
-        expect(nextMsg).to.be.equal("MSG0")
-    })
-  
-    it('wrong message format (MSG string malformed) test', () => {
-    
-        // 1. ARRANGE
-        const currMsg = "MS0"
-
-        // 2. ACT
-        // 3. ASSERT
-        expect( () => MessageIdGenerator.addOffset(currMsg, 1) ).to.throw();
-    })
-
-    it('wrong message format (missing number) test', () => {
-    
-        // 1. ARRANGE
-        const currMsg = "MSG"
-
-        // 2. ACT
-        // 3. ASSERT
-        expect( () => MessageIdGenerator.addOffset(currMsg, 1) ).to.throw();
-    })
-
-    it('wrong message format (extra data after number) test', () => {
-    
-        // 1. ARRANGE
-        const currMsg = "MSG0-extradata"
-
-        // 2. ACT
-        // 3. ASSERT
-        expect( () => MessageIdGenerator.addOffset(currMsg, 1) ).to.throw();
-    })
-
-    it('wrong message format (not a number) test', () => {
-    
-        // 1. ARRANGE
-        const currMsg = "MSG0a"
-
-        // 2. ACT
-        // 3. ASSERT
-        expect( () => MessageIdGenerator.addOffset(currMsg, 1) ).to.throw();
-    })
-})
-
-describe('compare', () => {
-    it('equal messages test', () => {
+        it('wrong message format (extra data after number) test', () => {
         
-        // 1. ARRANGE
-        const msg1 = "MSG0"
-        const msg2 = "MSG0"
-  
-        // 2. ACT
-        const result = MessageIdGenerator.compare(msg1, msg2)
-  
-        // 3. ASSERT
-        expect(result).to.be.equal(0)
-    })
+            // 1. ARRANGE
+            const currMsg = "MSG0-extradata"
 
-    it('first message is smaller test', () => {
+            // 2. ACT
+            // 3. ASSERT
+            expect( () => MessageIdGenerator.nextMessageId(currMsg) ).to.throw();
+        })
+
+        it('wrong message format (not a number) test', () => {
         
-        // 1. ARRANGE
-        const msg1 = "MSG0"
-        const msg2 = "MSG1"
-  
-        // 2. ACT
-        const result = MessageIdGenerator.compare(msg1, msg2)
-  
-        // 3. ASSERT
-        expect(result).to.be.equal(-1)
+            // 1. ARRANGE
+            const currMsg = "MSG0a"
+
+            // 2. ACT
+            // 3. ASSERT
+            expect( () => MessageIdGenerator.nextMessageId(currMsg) ).to.throw();
+        })
     })
 
-    it('first message is bigger test', () => {
+    describe('addOffset', () => {
+        it('base test', () => {
+            
+            // 1. ARRANGE
+            const currMsg = "MSG0"
+    
+            // 2. ACT
+            const nextMsg = MessageIdGenerator.addOffset(currMsg, 1)
+    
+            // 3. ASSERT
+            expect(nextMsg).to.be.equal("MSG1")
+        })
+
+        it('add digit test', () => {
+            
+            // 1. ARRANGE
+            const currMsg = "MSG9"
+    
+            // 2. ACT
+            const nextMsg = MessageIdGenerator.addOffset(currMsg, 1)
+    
+            // 3. ASSERT
+            expect(nextMsg).to.be.equal("MSG90")
+        })
+
+        it('big offest test', () => {
+            
+            // 1. ARRANGE
+            const currMsg = "MSG0"
         
-        // 1. ARRANGE
-        const msg1 = "MSG1"
-        const msg2 = "MSG0"
-  
-        // 2. ACT
-        const result = MessageIdGenerator.compare(msg1, msg2)
-  
-        // 3. ASSERT
-        expect(result).to.be.equal(1)
-    })
-  
-    it('wrong message format (MSG string malformed) test', () => {
+            // 2. ACT
+            const nextMsg = MessageIdGenerator.addOffset(currMsg, 100)
+        
+            // 3. ASSERT
+            expect(nextMsg).to.be.equal("MSG99999999990")
+        })
     
-        // 1. ARRANGE
-        const msg1 = "MS0"
-        const msg2 = "MSG0"
+        it('negative offset test', () => {
+        
+            // 1. ARRANGE
+            const currMsg = "MSG1"
+    
+            // 2. ACT
+            // 3. ASSERT
+            expect( () => MessageIdGenerator.addOffset(currMsg, -1) ).to.throw()
+        })
+    
+        it('wrong message format (MSG string malformed) test', () => {
+        
+            // 1. ARRANGE
+            const currMsg = "MS0"
 
-        // 2. ACT
-        // 3. ASSERT
-        expect( () => MessageIdGenerator.compare(msg1, msg2) ).to.throw();
+            // 2. ACT
+            // 3. ASSERT
+            expect( () => MessageIdGenerator.addOffset(currMsg, 1) ).to.throw();
+        })
+
+        it('wrong message format (missing number) test', () => {
+        
+            // 1. ARRANGE
+            const currMsg = "MSG"
+
+            // 2. ACT
+            // 3. ASSERT
+            expect( () => MessageIdGenerator.addOffset(currMsg, 1) ).to.throw();
+        })
+
+        it('wrong message format (extra data after number) test', () => {
+        
+            // 1. ARRANGE
+            const currMsg = "MSG0-extradata"
+
+            // 2. ACT
+            // 3. ASSERT
+            expect( () => MessageIdGenerator.addOffset(currMsg, 1) ).to.throw();
+        })
+
+        it('wrong message format (not a number) test', () => {
+        
+            // 1. ARRANGE
+            const currMsg = "MSG0a"
+
+            // 2. ACT
+            // 3. ASSERT
+            expect( () => MessageIdGenerator.addOffset(currMsg, 1) ).to.throw();
+        })
     })
 
-    it('wrong message format (missing number) test', () => {
+    describe('compare', () => {
+        it('equal messages test', () => {
+            
+            // 1. ARRANGE
+            const msg1 = "MSG0"
+            const msg2 = "MSG0"
     
-        // 1. ARRANGE
-        const msg1 = "MSG0"
-        const msg2 = "MSG"
-
-        // 2. ACT
-        // 3. ASSERT
-        expect( () => MessageIdGenerator.compare(msg1, msg2) ).to.throw();
-    })
-
-    it('wrong message format (extra data after number) test', () => {
+            // 2. ACT
+            const result = MessageIdGenerator.compare(msg1, msg2)
     
-        // 1. ARRANGE
-        const msg1 = "MSG0-extradata"
-        const msg2 = "MSG0"
+            // 3. ASSERT
+            expect(result).to.be.equal(0)
+        })
 
-        // 2. ACT
-        // 3. ASSERT
-        expect( () => MessageIdGenerator.compare(msg1, msg2) ).to.throw();
-    })
-
-    it('wrong message format (not a number) test', () => {
+        it('first message is smaller test', () => {
+            
+            // 1. ARRANGE
+            const msg1 = "MSG0"
+            const msg2 = "MSG1"
     
-        // 1. ARRANGE
-        const msg1 = "MSG0a"
-        const msg2 = "MSG0"
+            // 2. ACT
+            const result = MessageIdGenerator.compare(msg1, msg2)
+    
+            // 3. ASSERT
+            expect(result).to.be.equal(-1)
+        })
 
-        // 2. ACT
-        // 3. ASSERT
-        expect( () => MessageIdGenerator.compare(msg1, msg2) ).to.throw();
+        it('first message is bigger test', () => {
+            
+            // 1. ARRANGE
+            const msg1 = "MSG1"
+            const msg2 = "MSG0"
+    
+            // 2. ACT
+            const result = MessageIdGenerator.compare(msg1, msg2)
+    
+            // 3. ASSERT
+            expect(result).to.be.equal(1)
+        })
+
+        it('first message is lexographically bigger test', () => {
+            
+            // 1. ARRANGE
+            const msg1 = "MSG90"
+            const msg2 = "MSG100"
+    
+            // 2. ACT
+            const result = MessageIdGenerator.compare(msg1, msg2)
+    
+            // 3. ASSERT
+            expect(result).to.be.equal(1)
+        })
+
+        it('second message is lexographically bigger test', () => {
+            
+            // 1. ARRANGE
+            const msg1 = "MSG100"
+            const msg2 = "MSG90"
+    
+            // 2. ACT
+            const result = MessageIdGenerator.compare(msg1, msg2)
+    
+            // 3. ASSERT
+            expect(result).to.be.equal(-1)
+        })
+    
+        it('wrong message format (MSG string malformed) test', () => {
+        
+            // 1. ARRANGE
+            const msg1 = "MS0"
+            const msg2 = "MSG0"
+
+            // 2. ACT
+            // 3. ASSERT
+            expect( () => MessageIdGenerator.compare(msg1, msg2) ).to.throw();
+        })
+
+        it('wrong message format (missing number) test', () => {
+        
+            // 1. ARRANGE
+            const msg1 = "MSG0"
+            const msg2 = "MSG"
+
+            // 2. ACT
+            // 3. ASSERT
+            expect( () => MessageIdGenerator.compare(msg1, msg2) ).to.throw();
+        })
+
+        it('wrong message format (extra data after number) test', () => {
+        
+            // 1. ARRANGE
+            const msg1 = "MSG0-extradata"
+            const msg2 = "MSG0"
+
+            // 2. ACT
+            // 3. ASSERT
+            expect( () => MessageIdGenerator.compare(msg1, msg2) ).to.throw();
+        })
+
+        it('wrong message format (not a number) test', () => {
+        
+            // 1. ARRANGE
+            const msg1 = "MSG0a"
+            const msg2 = "MSG0"
+
+            // 2. ACT
+            // 3. ASSERT
+            expect( () => MessageIdGenerator.compare(msg1, msg2) ).to.throw();
+        })
     })
 })

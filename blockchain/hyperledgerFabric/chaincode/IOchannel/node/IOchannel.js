@@ -87,7 +87,7 @@ let Chaincode = class {
     console.info('============= finish putMessage ===========');
   }
 
-  async queryAllMessages(stub, args) {
+  async queryByRange(stub, args) {
     console.info('============= start queryAllMessages ===========');
 
     const startKey = args[0];
