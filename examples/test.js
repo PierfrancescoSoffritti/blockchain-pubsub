@@ -1,34 +1,34 @@
 const hyperledgerFabric = require('blockchain-pubsub-hyperledger-fabric-interface')
-const BlockchainPubSub = require('pubsub')
+const PersistentDataSourcePubSub = require('pubsub')
 
 async function test() {
 
     const hubId = await hyperledgerFabric.init("admin", "user1")
 
-    const blockchainPubSub = new BlockchainPubSub(hubId, hyperledgerFabric)
+    const persistentPubSub = new PersistentDataSourcePubSub(hubId, hyperledgerFabric)
 
     await wait(2000)
 
-    const connection = await blockchainPubSub.onNewMessage(message => console.log(`[TEST] new message received: ${JSON.stringify(message)}`))
+    const connection = await persistentPubSub.onNewMessage(message => console.log(`[TEST] new message received: ${JSON.stringify(message)}`))
     // setTimeout( () => connection.disconnect(), 8000)
 
     await wait(2000)
     console.log("\n")
 
-    await blockchainPubSub.sendMessage("message #1")
+    await persistentPubSub.sendMessage("message #1")
 
     await wait(2000)
     console.log("\n")
 
-    await blockchainPubSub.sendMessage("message #2")
+    await persistentPubSub.sendMessage("message #2")
 
     await wait(2000)
     console.log("\n")
 
-    await blockchainPubSub.sendMessage("message #3")
-    await blockchainPubSub.sendMessage("message #4")
-    await blockchainPubSub.sendMessage("message #5")
-    await blockchainPubSub.sendMessage("message #6")
+    await persistentPubSub.sendMessage("message #3")
+    await persistentPubSub.sendMessage("message #4")
+    await persistentPubSub.sendMessage("message #5")
+    await persistentPubSub.sendMessage("message #6")
 
     await wait(2000)
     console.log("\n")
