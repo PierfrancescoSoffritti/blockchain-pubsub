@@ -9,6 +9,8 @@
     },
     "dependencies": {
         "blockchain-pubsub-hyperledger-fabric-adapter": "file:../blockchain/hyperledgerFabric",
-        "pubsub": "file:../pubsub"
+        "hub": "file:../hub",
+        "pubsub": "file:../pubsub",
+        "blockchain-pubsub-utils": "file:../utils"
     }
 }
