@@ -19,8 +19,6 @@ function TCPClient(
 
         client.on('connect', () => {
             onConnected()
-
-            self.send( { clientId } )
             flushOutQueue()
         })
 
