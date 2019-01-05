@@ -1,7 +1,7 @@
 const expect = require('chai').expect
 const sinon = require('sinon')
-const MockPersistentDataSource = require('./MockPersistentDataSource')
-const { wait } = require('../utils')
+const MockPersistentDataSource = require('../src/MockPersistentDataSource')
+const { wait } = require('../src/utils')
 
 describe('MockPersistentDataSource', () => {
     describe('persist', () => {

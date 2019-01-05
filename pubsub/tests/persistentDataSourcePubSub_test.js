@@ -1,8 +1,7 @@
 const expect = require('chai').expect
 const sinon = require('sinon')
 const PersistentDataSourcePubSub = require('../src/PersistentDataSourcePubSub')
-const MockPersistentDataSource = require('./mocks/MockPersistentDataSource')
-const { wait } = require('./utils')
+const { MockPersistentDataSource, wait } = require('blockchain-pubsub-utils')
 
 describe('PersistentDataSourcePubSub', () => {
     describe('sendMessage', () => {
