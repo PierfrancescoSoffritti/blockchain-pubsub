@@ -24,7 +24,7 @@ describe('TCPCServer', () => {
             // 2. ACT
             tcpServer.start({ port: 8900 })
             tcpClient.connectTo({ port: 8900, ip: "localhost"})
-            await wait(4)
+            await wait(10)
             tcpServer.close()
             tcpClient.finish()
 
@@ -53,7 +53,7 @@ describe('TCPCServer', () => {
             tcpServer.start({ port: 8900 })
             tcpClient.connectTo({ port: 8900, ip: "localhost"})
             tcpClient.finish()
-            await wait(4)
+            await wait(10)
             tcpServer.close()
 
             // 3. ASSERT
@@ -81,7 +81,7 @@ describe('TCPCServer', () => {
             tcpServer.start({ port: 8900 })
             tcpClient.connectTo({ port: 8900, ip: "localhost"})
             tcpClient.send("message #1")
-            await wait(4)
+            await wait(10)
             tcpServer.close()
             tcpClient.finish()
 
@@ -116,7 +116,7 @@ describe('TCPCServer', () => {
             tcpClient.send("message #1")
             tcpClient.send("message #2")
             tcpClient.send("message #3")
-            await wait(4)
+            await wait(10)
             tcpServer.close()
             tcpClient.finish()
 

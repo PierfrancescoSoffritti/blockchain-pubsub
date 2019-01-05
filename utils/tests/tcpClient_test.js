@@ -55,7 +55,7 @@ describe('TCPClient', () => {
             tcpClient.connectTo({ port: 8900, ip: "localhost"})
             tcpClient.finish()
             tcpServer.close()
-            await wait(4)
+            await wait(10)
 
             // 3. ASSERT
             expect(c_onConnectionClosed.calledOnce).to.be.true
@@ -83,7 +83,7 @@ describe('TCPClient', () => {
             tcpClient.connectTo({ port: 8900, ip: "localhost"})            
             tcpServer.close()
             tcpClient.finish()
-            await wait(4)
+            await wait(10)
 
             // 3. ASSERT
             expect(c_onConnectionClosed.calledOnce).to.be.true
@@ -109,7 +109,7 @@ describe('TCPClient', () => {
             // 2. ACT
             tcpServer.start({ port: 8900 })
             tcpClient.connectTo({ port: 8900, ip: "localhost"})     
-            await wait(4)
+            await wait(10)
             tcpClient.finish()
             tcpServer.close()
 
