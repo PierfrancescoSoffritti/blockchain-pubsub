@@ -6,38 +6,53 @@ const SEPARATOR = "$$SEP$$"
 const connecetClients = {}
 
 function Hub(hubId, persistendDataLayer) {
+    let server
+
     const persistentPubSub = new PersistentDataSourcePubSub(hubId, persistendDataLayer)
     const clientDispatcher = new Dispatcher(connecetClients, SEPARATOR)
 
-    const connection = await persistentPubSub.onNewMessage(message => clientDispatcher.dispatch(message))
-    listenForLocalClients(8900)
+    let persistendPubSubConnection
 
-    function listenForLocalClients(port) {    
-        const server = net.createServer( socket => {
+    this.start = async function({ port }) {
+
+        persistendPubSubConnection = await persistentPubSub.onNewMessage(message => clientDispatcher.dispatch(message))
+
+        server = net.createServer( socket => {
             let clientId
 
-            socket.on('data', message => { onNewMessageFromClient(message) })    
+            socket.on('data', message => { 
+                const tClientId = onNewMessageFromClient(message)
+
+                if(!clientId) {
+                    clientId = tClientId
+                    connecetClients[clientId] = socket
+                }
+            })    
             socket.on('end', () => { delete connecetClients[clientId] })    
             socket.on('error', () => { delete connecetClients[clientId] })    
         })
     
         server.listen(port)
     }
+
+    this.close = function() {
+        server.close()
+    }
     
     function onNewMessageFromClient(message) {
+        let clientId
+
         String(message)
             .split(SEPARATOR)
             .filter(string => string.trim().length !== 0)
-            .map(message => { console.log(`\t[${clientId} IO] Message received: ${message}`); return message })
             .map(message => JSON.parse(message))
-            .forEach(message => {  
-    
-                if(!clientId) {
-                    clientId = message.senderId
-                    connecetClients[clientId] = socket
-                }
-                
+            .forEach(message => {
+                clientId = message.senderId                
                 persistentPubSub.sendMessage(message)
         })
+
+        return clientId
     }
 }
+
+module.exports = Hub;
