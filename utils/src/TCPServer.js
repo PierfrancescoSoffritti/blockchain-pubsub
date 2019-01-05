@@ -10,6 +10,8 @@ function TCPServer({ onClientConnected = () => {}, onMessage = () => {}, onEnd =
         server = net.createServer( socket => {
             
             onClientConnected()
+            
+            socket.write( JSON.stringify("hardcoded message from server") +SEPARATOR)
 
             socket.on('data', message => onNewMessageFromClient(message, onMessage))    
             socket.on('end', onEnd)    

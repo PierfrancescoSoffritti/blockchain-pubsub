@@ -19,16 +19,7 @@ describe('TCPCServer', () => {
                 { onClientConnected: s_onClientConnected, onMessage: s_onMessage, onEnd: s_onClientEnd, onError: s_onClientError, onClose: s_onClose }
             )
 
-            const c_onConnecting = sinon.stub()
-            const c_onConnected = sinon.stub()
-            const c_onConnectionClosed = sinon.stub()
-            const c_onErrorClient = sinon.stub()
-            const c_onMessageReceived = sinon.stub()
-
-            const tcpClient = new TCPClient(
-                "clientId",
-                { onConnecting: c_onConnecting, onConnected: c_onConnected, onConnectionClosed: c_onConnectionClosed, onError: c_onErrorClient, onMessageReceived: c_onMessageReceived }
-            )
+            const tcpClient = new TCPClient("clientId", { })
 
             // 2. ACT
             tcpServer.start({ port: 8900 })
@@ -56,16 +47,7 @@ describe('TCPCServer', () => {
                 { onClientConnected: s_onClientConnected, onMessage: s_onMessage, onEnd: s_onClientEnd, onError: s_onClientError, onClose: s_onClose }
             )
 
-            const c_onConnecting = sinon.stub()
-            const c_onConnected = sinon.stub()
-            const c_onConnectionClosed = sinon.stub()
-            const c_onErrorClient = sinon.stub()
-            const c_onMessageReceived = sinon.stub()
-
-            const tcpClient = new TCPClient(
-                "clientId",
-                { onConnecting: c_onConnecting, onConnected: c_onConnected, onConnectionClosed: c_onConnectionClosed, onError: c_onErrorClient, onMessageReceived: c_onMessageReceived }
-            )
+            const tcpClient = new TCPClient("clientId", { })
 
             // 2. ACT
             tcpServer.start({ port: 8900 })
@@ -93,16 +75,7 @@ describe('TCPCServer', () => {
                 { onClientConnected: s_onClientConnected, onMessage: s_onMessage, onEnd: s_onClientEnd, onError: s_onClientError, onClose: s_onClose }
             )
 
-            const c_onConnecting = sinon.stub()
-            const c_onConnected = sinon.stub()
-            const c_onConnectionClosed = sinon.stub()
-            const c_onErrorClient = sinon.stub()
-            const c_onMessageReceived = sinon.stub()
-
-            const tcpClient = new TCPClient(
-                "clientId",
-                { onConnecting: c_onConnecting, onConnected: c_onConnected, onConnectionClosed: c_onConnectionClosed, onError: c_onErrorClient, onMessageReceived: c_onMessageReceived }
-            )
+            const tcpClient = new TCPClient("clientId", { })
 
             // 2. ACT
             tcpServer.start({ port: 8900 })
@@ -130,16 +103,7 @@ describe('TCPCServer', () => {
                 { onClientConnected: s_onClientConnected, onMessage: s_onMessage, onEnd: s_onClientEnd, onError: s_onClientError, onClose: s_onClose }
             )
 
-            const c_onConnecting = sinon.stub()
-            const c_onConnected = sinon.stub()
-            const c_onConnectionClosed = sinon.stub()
-            const c_onErrorClient = sinon.stub()
-            const c_onMessageReceived = sinon.stub()
-
-            const tcpClient = new TCPClient(
-                "clientId",
-                { onConnecting: c_onConnecting, onConnected: c_onConnected, onConnectionClosed: c_onConnectionClosed, onError: c_onErrorClient, onMessageReceived: c_onMessageReceived }
-            )
+            const tcpClient = new TCPClient("clientId", { })
 
             s_onMessage.withArgs("message #1").returns(1)
             s_onMessage.withArgs("message #2").returns(2)
