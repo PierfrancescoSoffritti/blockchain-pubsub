@@ -57,6 +57,7 @@ describe('Hub', () => {
 
             // 2. ACT
             hub.start({ port: 8900 })
+            await wait(10)
             tcpClient1.connectTo({ port: 8900, ip: "localhost" })
             tcpClient2.connectTo({ port: 8900, ip: "localhost" })
             await wait(10)
