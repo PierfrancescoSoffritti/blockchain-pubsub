@@ -31,6 +31,7 @@ function MockPersistentDataSource() {
 
     this.onDataPersisted = async function(onDataPersistedListener) {
         onNewDataPersisted = onDataPersistedListener
+        return { disconnect: () => {} }
     }
 
     this.getDataArray = function(){

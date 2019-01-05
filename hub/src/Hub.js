@@ -37,6 +37,7 @@ function Hub(hubId, persistendDataLayer) {
 
     this.close = function() {
         server.close()
+        persistendPubSubConnection.disconnect()
     }
     
     function onNewMessageFromClient(message) {
@@ -46,6 +47,7 @@ function Hub(hubId, persistendDataLayer) {
             .split(SEPARATOR)
             .filter(string => string.trim().length !== 0)
             .map(message => JSON.parse(message))
+            .filter(message => message.isPersistent)
             .forEach(message => {
                 clientId = message.senderId                
                 persistentPubSub.sendMessage(message)

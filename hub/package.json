@@ -2,7 +2,7 @@
     "name": "hub",
     "version": "1.0.0",
     "description": "hub of distributed pubsub application",
-    "main": "test.js",
+    "main": "index.js",
     "scripts": {
         "test": "find ./tests -name '*_test.js' | xargs mocha -R spec",
         "startFabric": "./node_modules/blockchain-pubsub-hyperledger-fabric-adapter/startFabric.sh node"
@@ -13,8 +13,8 @@
     },
     "devDependencies": {
         "blockchain-pubsub-utils": "file:../utils",
-        "chai": "^4.2.0",
         "mocha": "^5.2.0",
+        "chai": "^4.2.0",
         "sinon": "^7.2.2"
     }
 }
