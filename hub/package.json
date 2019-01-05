@@ -12,6 +12,7 @@
         "pubsub": "file:../pubsub"
     },
     "devDependencies": {
+        "pubsub": "file:../pubsub",
         "blockchain-pubsub-utils": "file:../utils",
         "chai": "^4.2.0",
         "mocha": "^5.2.0",
