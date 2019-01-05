@@ -3,6 +3,7 @@ const net = require('net')
 const SEPARATOR = "$$SEP$$"
 
 function TCPClient(
+    clientId,
     { onConnecting = () => {}, onConnected = () => {}, onConnectionClosed = () => {}, onError = () => {}, onMessageReceived = () => {} }) {
 
     const self = this
@@ -18,6 +19,8 @@ function TCPClient(
 
         client.on('connect', () => {
             onConnected()
+
+            self.send({ senderId: clientId })
             flushOutQueue()
         })
 
@@ -33,6 +36,9 @@ function TCPClient(
     }
 
     this.send = function(message) {
+        
+        message.senderId = clientId
+
         if(!clientSocket.connecting)
             clientSocket.write( JSON.stringify(message) +SEPARATOR)
         else

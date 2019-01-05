@@ -17,6 +17,7 @@ describe('TCPClient', () => {
             const c_onMessageReceived = sinon.stub()
 
             const tcpClient = new TCPClient(
+                "clientId",
                 { onConnecting: c_onConnecting, onConnected: c_onConnected, onConnectionClosed: c_onConnectionClosed, onError: c_onErrorClient, onMessageReceived: c_onMessageReceived }
             )
 
@@ -45,6 +46,7 @@ describe('TCPClient', () => {
             const c_onMessageReceived = sinon.stub()
 
             const tcpClient = new TCPClient(
+                "clientId",
                 { onConnecting: c_onConnecting, onConnected: c_onConnected, onConnectionClosed: c_onConnectionClosed, onError: c_onErrorClient, onMessageReceived: c_onMessageReceived }
             )
 
@@ -72,6 +74,7 @@ describe('TCPClient', () => {
             const c_onMessageReceived = sinon.stub()
 
             const tcpClient = new TCPClient(
+                "clientId",
                 { onConnecting: c_onConnecting, onConnected: c_onConnected, onConnectionClosed: c_onConnectionClosed, onError: c_onErrorClient, onMessageReceived: c_onMessageReceived }
             )
 
@@ -99,6 +102,7 @@ describe('TCPClient', () => {
             const c_onMessageReceived = sinon.stub()
 
             const tcpClient = new TCPClient(
+                "clientId",
                 { onConnecting: c_onConnecting, onConnected: c_onConnected, onConnectionClosed: c_onConnectionClosed, onError: c_onErrorClient, onMessageReceived: c_onMessageReceived }
             )
 

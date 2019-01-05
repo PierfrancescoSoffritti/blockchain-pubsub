@@ -20,11 +20,11 @@ function Hub(hubId, persistendDataLayer) {
         server = net.createServer( socket => {
             let clientId
 
-            socket.on('data', message => { 
-                const tClientId = onNewMessageFromClient(message)
-
-                if(!clientId) {
-                    clientId = tClientId
+            socket.on('data', message => {
+                if(clientId) {
+                    onNewMessageFromClient(message)
+                } else {
+                    clientId = getSenderId(message)
                     connecetClients[clientId] = socket
                 }
             })    
@@ -41,19 +41,21 @@ function Hub(hubId, persistendDataLayer) {
     }
     
     function onNewMessageFromClient(message) {
-        let clientId
-
         String(message)
             .split(SEPARATOR)
             .filter(string => string.trim().length !== 0)
             .map(message => JSON.parse(message))
             .filter(message => message.isPersistent)
-            .forEach(message => {
-                clientId = message.senderId                
-                persistentPubSub.sendMessage(message)
-        })
+            .forEach(message => persistentPubSub.sendMessage(message))
+    }
 
-        return clientId
+    function getSenderId(message) {
+        const msg = String(message)
+            .split(SEPARATOR)
+            .filter(string => string.trim().length !== 0)
+            .map(message => JSON.parse(message))[0]
+
+        return msg.senderId
     }
 }
 

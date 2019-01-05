@@ -19,7 +19,7 @@ describe('TCPCServer', () => {
                 { onClientConnected: s_onClientConnected, onMessage: s_onMessage, onEnd: s_onClientEnd, onError: s_onClientError, onClose: s_onClose }
             )
 
-            const tcpClient = new TCPClient({ })
+            const tcpClient = new TCPClient("clientId", { })
 
             // 2. ACT
             tcpServer.start({ port: 8900 })
@@ -47,7 +47,7 @@ describe('TCPCServer', () => {
                 { onClientConnected: s_onClientConnected, onMessage: s_onMessage, onEnd: s_onClientEnd, onError: s_onClientError, onClose: s_onClose }
             )
 
-            const tcpClient = new TCPClient({ })
+            const tcpClient = new TCPClient("clientId", { })
 
             // 2. ACT
             tcpServer.start({ port: 8900 })
@@ -75,7 +75,7 @@ describe('TCPCServer', () => {
                 { onClientConnected: s_onClientConnected, onMessage: s_onMessage, onEnd: s_onClientEnd, onError: s_onClientError, onClose: s_onClose }
             )
 
-            const tcpClient = new TCPClient({ })
+            const tcpClient = new TCPClient("clientId", { })
 
             // 2. ACT
             tcpServer.start({ port: 8900 })
@@ -86,7 +86,7 @@ describe('TCPCServer', () => {
             tcpClient.finish()
 
             // 3. ASSERT
-            expect(s_onMessage.calledOnce).to.be.true
+            expect(s_onMessage.calledTwice).to.be.true
             expect(s_onMessage.calledWith("message #1")).to.be.true
         })
 
@@ -103,7 +103,7 @@ describe('TCPCServer', () => {
                 { onClientConnected: s_onClientConnected, onMessage: s_onMessage, onEnd: s_onClientEnd, onError: s_onClientError, onClose: s_onClose }
             )
 
-            const tcpClient = new TCPClient({ })
+            const tcpClient = new TCPClient("clientId", { })
 
             s_onMessage.withArgs("message #1").returns(1)
             s_onMessage.withArgs("message #2").returns(2)
@@ -121,8 +121,8 @@ describe('TCPCServer', () => {
             tcpClient.finish()
 
             // 3. ASSERT
-            expect(s_onMessage.calledThrice).to.be.true
-            expect(s_onMessage.returnValues).to.have.ordered.members([1, 2, 3])
+            expect(s_onMessage.callCount).to.be.equal(4)
+            expect(s_onMessage.returnValues).to.have.ordered.members([0, 1, 2, 3])
         })
     })
 })
