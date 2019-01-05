@@ -59,6 +59,7 @@ describe('Hub', () => {
             hub.start({ port: 8900 })
             await wait(10)
             tcpClient1.connectTo({ port: 8900, ip: "localhost" })
+            await wait(10)
             tcpClient2.connectTo({ port: 8900, ip: "localhost" })
             await wait(10)
             tcpClient1.finish()
