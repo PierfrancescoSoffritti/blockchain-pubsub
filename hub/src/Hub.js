@@ -25,7 +25,13 @@ function Hub(hubId, persistendDataLayer) {
                     onNewMessageFromClient(message)
                 } else {
                     clientId = getSenderId(message)
-                    connecetClients[clientId] = socket
+                    
+                    if(connecetClients[clientId]) {
+                        socket.write( JSON.stringify(`A client with id ${clientId} is already connected`) +SEPARATOR )
+                        socket.end()
+                    } else {
+                        connecetClients[clientId] = socket
+                    }
                 }
             })    
             socket.on('end', () => { delete connecetClients[clientId] })    

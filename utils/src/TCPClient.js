@@ -35,8 +35,7 @@ function TCPClient(
         client.on('error', onError )
     }
 
-    this.send = function(message) {
-        
+    this.send = function(message) {        
         message.senderId = clientId
 
         if(!clientSocket.connecting)
