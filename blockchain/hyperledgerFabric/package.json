@@ -1,7 +1,7 @@
 {
-    "name": "blockchain-pubsub-hyperledger-fabric-interface",
+    "name": "blockchain-pubsub-hyperledger-fabric-adapter",
     "version": "1.0.0",
-    "description": "Hyperledger Fabric Interface for blockchain-pubsub applications",
+    "description": "Hyperledger Fabric adapter for blockchain-pubsub applications",
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"

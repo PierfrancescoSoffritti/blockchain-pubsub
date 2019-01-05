@@ -5,10 +5,10 @@
     "main": "test.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "startFabric": "./node_modules/blockchain-pubsub-hyperledger-fabric-interface/startFabric.sh node"
+        "startFabric": "./node_modules/blockchain-pubsub-hyperledger-fabric-adapter/startFabric.sh node"
     },
     "dependencies": {
-        "blockchain-pubsub-hyperledger-fabric-interface": "file:../blockchain/hyperledgerFabric",
+        "blockchain-pubsub-hyperledger-fabric-adapter": "file:../blockchain/hyperledgerFabric",
         "pubsub": "file:../pubsub"
     }
 }
