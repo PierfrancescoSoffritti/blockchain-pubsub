@@ -1,6 +1,6 @@
 const expect = require('chai').expect
 const sinon = require('sinon')
-const { MockPersistentDataSource, TCPClient, wait } = require('blockchain-pubsub-utils')
+const { MockPersistentDataLayer, TCPClient, wait } = require('blockchain-pubsub-utils')
 const Hub = require('../src/Hub')
 
 describe('Hub', () => {
@@ -8,7 +8,7 @@ describe('Hub', () => {
         it('base test', async () => {
             
             // 1. ARRANGE
-            const datalayer = new MockPersistentDataSource()
+            const datalayer = new MockPersistentDataLayer()
             const hub = new Hub("hub0", datalayer)
 
             const onConnecting = sinon.stub()
@@ -18,7 +18,6 @@ describe('Hub', () => {
             const onMessageReceived = sinon.stub()
 
             const tcpClient = new TCPClient(
-                "clientId",
                 { onConnecting, onConnected, onConnectionClosed, onError, onMessageReceived }
             )
 
@@ -35,42 +34,38 @@ describe('Hub', () => {
         })
     })
 
-    // describe('communication', () => {
-    //     it('persistent message is persisted test', async () => {
+    describe('communication', () => {
+        it('message delivered to same client through persistent data layer test', async () => {
             
-    //         // 1. ARRANGE
-    //         const datalayer = new MockPersistentDataSource()
-    //         const hub = new Hub("hub0", datalayer)
+            // 1. ARRANGE
+            const datalayer = new MockPersistentDataLayer()
+            const hub = new Hub("hub0", datalayer)
 
-    //         const onConnecting = sinon.stub()
-    //         const onConnected = sinon.stub()
-    //         const onConnectionClosed = sinon.stub()
-    //         const onError = sinon.stub()
-    //         const onMessageReceived = sinon.stub()
+            const onConnecting = sinon.stub()
+            const onConnected = sinon.stub()
+            const onConnectionClosed = sinon.stub()
+            const onError = sinon.stub()
+            const onMessageReceived = sinon.stub()
 
-    //         const tcpClient = new TCPClient(
-    //             "clientId",
-    //             { onConnecting, onConnected, onConnectionClosed, onError, onMessageReceived }
-    //         )
-            
-    //         const onDataPersisted = sinon.stub()
-    //         await datalayer.onDataPersisted(onDataPersisted)
+            const tcpClient = new TCPClient(
+                { onConnecting, onConnected, onConnectionClosed, onError, onMessageReceived }
+            )
 
-    //         // 2. ACT
-    //         hub.start({ port: 8900 })
-    //         tcpClient.connectTo({ port: 8900, ip: "localhost"})
-    //         tcpClient.send({ senderId: "senderId", recipientId: "recipientId", isPersistent: true, payload: "message #1" })
-    //         tcpClient.finish()
-    //         hub.close()
-    //         await wait(4)
+            // 2. ACT
+            hub.start({ port: 8900 })
+            tcpClient.connectTo({ port: 8900, ip: "localhost"})
+            tcpClient.send({ senderId: "senderId", recipientId: "senderId", isPersistent: true, payload: "message #1" })
+            await wait(10)
+            tcpClient.finish()
+            hub.close()
 
-    //         // 3. ASSERT
-    //         expect(onDataPersisted.calledOnce).to.be.true;
-    //         expect(onDataPersisted.calledWith({ senderId: "senderId", recipientId: "recipientId", isPersistent: true, payload: "message #1" })).to.be.true
-    //     })
+            // 3. ASSERT
+            expect(onMessageReceived.calledOnce).to.be.true;
+            expect(onMessageReceived.calledWith({ senderId: "senderId", recipientId: "senderId", isPersistent: true, payload: "message #1" })).to.be.true
+        })
 
-        // it('non persistent message is not persisted test', async () => {
+        // it('message delivered to different client through persistent data layer test', async () => {
         // })
 
-    // })
+    })
 })

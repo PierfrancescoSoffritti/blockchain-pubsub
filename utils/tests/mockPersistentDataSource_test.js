@@ -1,14 +1,14 @@
 const expect = require('chai').expect
 const sinon = require('sinon')
-const MockPersistentDataSource = require('../src/MockPersistentDataSource')
+const MockPersistentDataLayer = require('../src/MockPersistentDataLayer')
 const { wait } = require('../src/utils')
 
-describe('MockPersistentDataSource', () => {
+describe('MockPersistentDataLayer', () => {
     describe('persist', () => {
         it('persisted message is persisted test', () => {
             
             // 1. ARRANGE
-            const datasource = new MockPersistentDataSource()
+            const datasource = new MockPersistentDataLayer()
 
             // 2. ACT
             datasource.persist({ id: "MSG0", content: "message #1" })
@@ -20,7 +20,7 @@ describe('MockPersistentDataSource', () => {
         it('not persisted message is not persisted test', () => {
             
             // 1. ARRANGE
-            const datasource = new MockPersistentDataSource()
+            const datasource = new MockPersistentDataLayer()
 
             // 2. ACT
 
@@ -33,7 +33,7 @@ describe('MockPersistentDataSource', () => {
         it('data is in range test', async () => {
             
             // 1. ARRANGE
-            const datasource = new MockPersistentDataSource()
+            const datasource = new MockPersistentDataLayer()
             datasource.data["MSG0"] = "message #1"
 
             // 2. ACT
@@ -47,7 +47,7 @@ describe('MockPersistentDataSource', () => {
         it('data is out of lower range test', async () => {
             
             // 1. ARRANGE
-            const datasource = new MockPersistentDataSource()
+            const datasource = new MockPersistentDataLayer()
             datasource.data["MSG0"] = "message #1"
 
             // 2. ACT
@@ -60,7 +60,7 @@ describe('MockPersistentDataSource', () => {
         it('data is out of upper range test', async () => {
             
             // 1. ARRANGE
-            const datasource = new MockPersistentDataSource()
+            const datasource = new MockPersistentDataLayer()
             datasource.data["MSG100"] = "message #1"
 
             // 2. ACT
@@ -73,7 +73,7 @@ describe('MockPersistentDataSource', () => {
         it('multiple results test', async () => {
             
             // 1. ARRANGE
-            const datasource = new MockPersistentDataSource()
+            const datasource = new MockPersistentDataLayer()
             datasource.data["MSG0"] = "message #1"
             datasource.data["MSG0"] = "message #2"
             datasource.data["MSG1"] = "message #3"
@@ -92,7 +92,7 @@ describe('MockPersistentDataSource', () => {
         it('complex id test', async () => {
             
             // 1. ARRANGE
-            const datasource = new MockPersistentDataSource()
+            const datasource = new MockPersistentDataLayer()
             datasource.data["MSG0-1"] = "message #1"
             datasource.data["MSG0-2"] = "message #2"
             datasource.data["MSG1-1"] = "message #3"
@@ -115,7 +115,7 @@ describe('MockPersistentDataSource', () => {
         it('listener called once test', async () => {
             
             // 1. ARRANGE
-            const datasource = new MockPersistentDataSource()
+            const datasource = new MockPersistentDataLayer()
             const onDataPersisted = sinon.fake()
             await datasource.onDataPersisted(onDataPersisted)
 
@@ -132,7 +132,7 @@ describe('MockPersistentDataSource', () => {
         it('listener called twice test', async () => {
             
             // 1. ARRANGE
-            const datasource = new MockPersistentDataSource()
+            const datasource = new MockPersistentDataLayer()
             const onDataPersisted = sinon.fake()
             await datasource.onDataPersisted(onDataPersisted)
 
@@ -150,7 +150,7 @@ describe('MockPersistentDataSource', () => {
             
             // 1. ARRANGE
             // 3. ASSERT
-            const datasource = new MockPersistentDataSource()
+            const datasource = new MockPersistentDataLayer()
             const onDataPersisted = async () => { 
                 const res = await datasource.queryRange("MSG0", "MSG10")
                 expect(res.length).to.be.equal(3)
@@ -168,7 +168,7 @@ describe('MockPersistentDataSource', () => {
         it('basic test', async () => {
             
             // 1. ARRANGE
-            const datasource = new MockPersistentDataSource()
+            const datasource = new MockPersistentDataLayer()
 
             // 2. ACT
             await datasource.persist({ id: "MSG0", content: "message #1" })

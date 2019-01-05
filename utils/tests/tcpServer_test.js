@@ -19,7 +19,7 @@ describe('TCPCServer', () => {
                 { onClientConnected: s_onClientConnected, onMessage: s_onMessage, onEnd: s_onClientEnd, onError: s_onClientError, onClose: s_onClose }
             )
 
-            const tcpClient = new TCPClient("clientId", { })
+            const tcpClient = new TCPClient({ })
 
             // 2. ACT
             tcpServer.start({ port: 8900 })
@@ -47,7 +47,7 @@ describe('TCPCServer', () => {
                 { onClientConnected: s_onClientConnected, onMessage: s_onMessage, onEnd: s_onClientEnd, onError: s_onClientError, onClose: s_onClose }
             )
 
-            const tcpClient = new TCPClient("clientId", { })
+            const tcpClient = new TCPClient({ })
 
             // 2. ACT
             tcpServer.start({ port: 8900 })
@@ -75,7 +75,7 @@ describe('TCPCServer', () => {
                 { onClientConnected: s_onClientConnected, onMessage: s_onMessage, onEnd: s_onClientEnd, onError: s_onClientError, onClose: s_onClose }
             )
 
-            const tcpClient = new TCPClient("clientId", { })
+            const tcpClient = new TCPClient({ })
 
             // 2. ACT
             tcpServer.start({ port: 8900 })
@@ -103,7 +103,7 @@ describe('TCPCServer', () => {
                 { onClientConnected: s_onClientConnected, onMessage: s_onMessage, onEnd: s_onClientEnd, onError: s_onClientError, onClose: s_onClose }
             )
 
-            const tcpClient = new TCPClient("clientId", { })
+            const tcpClient = new TCPClient({ })
 
             s_onMessage.withArgs("message #1").returns(1)
             s_onMessage.withArgs("message #2").returns(2)

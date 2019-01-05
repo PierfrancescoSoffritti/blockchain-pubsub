@@ -1,7 +1,7 @@
 const expect = require('chai').expect
 const sinon = require('sinon')
 const PersistentDataSourcePubSub = require('../src/PersistentDataSourcePubSub')
-const { MockPersistentDataSource, wait } = require('blockchain-pubsub-utils')
+const { MockPersistentDataLayer, wait } = require('blockchain-pubsub-utils')
 
 describe('PersistentDataSourcePubSub', () => {
     describe('sendMessage', () => {
@@ -9,7 +9,7 @@ describe('PersistentDataSourcePubSub', () => {
             
             // 1. ARRANGE
             const pubsubId = 1
-            const persistentData = new MockPersistentDataSource()
+            const persistentData = new MockPersistentDataLayer()
             const pubsub = new PersistentDataSourcePubSub(pubsubId, persistentData)
 
             // 2. ACT
@@ -25,7 +25,7 @@ describe('PersistentDataSourcePubSub', () => {
             
             // 1. ARRANGE
             const pubsubId = 1
-            const persistentData = new MockPersistentDataSource()
+            const persistentData = new MockPersistentDataLayer()
             const pubsub = new PersistentDataSourcePubSub(pubsubId, persistentData)
 
             // 2. ACT
@@ -48,7 +48,7 @@ describe('PersistentDataSourcePubSub', () => {
             // 1. ARRANGE
             const pubsubId1 = 1
             const pubsubId2 = 2
-            const persistentData = new MockPersistentDataSource()
+            const persistentData = new MockPersistentDataLayer()
             const pubsub1 = new PersistentDataSourcePubSub(pubsubId1, persistentData)
             const pubsub2 = new PersistentDataSourcePubSub(pubsubId2, persistentData)
 
@@ -72,7 +72,7 @@ describe('PersistentDataSourcePubSub', () => {
         it('base test', async () => {
             // 1. ARRANGE
             const pubsubId = 1
-            const persistentData = new MockPersistentDataSource()
+            const persistentData = new MockPersistentDataLayer()
             const pubsub = new PersistentDataSourcePubSub(pubsubId, persistentData)
 
             const onNewMessage = sinon.fake()
@@ -89,7 +89,7 @@ describe('PersistentDataSourcePubSub', () => {
         it('correct message is passed as argument test', async () => {
             // 1. ARRANGE
             const pubsubId = 1
-            const persistentData = new MockPersistentDataSource()
+            const persistentData = new MockPersistentDataLayer()
             const pubsub = new PersistentDataSourcePubSub(pubsubId, persistentData)
 
             const callback = sinon.stub()
@@ -107,7 +107,7 @@ describe('PersistentDataSourcePubSub', () => {
             // 1. ARRANGE
             const pubsubId1 = 1
             const pubsubId2 = 2
-            const persistentData = new MockPersistentDataSource()
+            const persistentData = new MockPersistentDataLayer()
             const pubsub1 = new PersistentDataSourcePubSub(pubsubId1, persistentData)
             const pubsub2 = new PersistentDataSourcePubSub(pubsubId2, persistentData)
 
@@ -132,7 +132,7 @@ describe('PersistentDataSourcePubSub', () => {
         it('only new data is emitted test', async () => {
             // 1. ARRANGE
             const pubsubId = 1
-            const persistentData = new MockPersistentDataSource()
+            const persistentData = new MockPersistentDataLayer()
             const pubsub = new PersistentDataSourcePubSub(pubsubId, persistentData)
 
             for(let i=0; i<5; i++) {
@@ -161,7 +161,7 @@ describe('PersistentDataSourcePubSub', () => {
             // 1. ARRANGE
             const pubsubId1 = 1
             const pubsubId2 = 2
-            const persistentData = new MockPersistentDataSource()
+            const persistentData = new MockPersistentDataLayer()
             const pubsub1 = new PersistentDataSourcePubSub(pubsubId1, persistentData)
             const pubsub2 = new PersistentDataSourcePubSub(pubsubId2, persistentData)
 

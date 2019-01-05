@@ -3,7 +3,6 @@ const net = require('net')
 const SEPARATOR = "$$SEP$$"
 
 function TCPClient(
-    clientId,
     { onConnecting = () => {}, onConnected = () => {}, onConnectionClosed = () => {}, onError = () => {}, onMessageReceived = () => {} }) {
 
     const self = this

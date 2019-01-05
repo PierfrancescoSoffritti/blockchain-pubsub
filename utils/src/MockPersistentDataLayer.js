@@ -1,4 +1,4 @@
-function MockPersistentDataSource() {
+function MockPersistentDataLayer() {
     const data = { }
     this.data = data
 
@@ -39,4 +39,4 @@ function MockPersistentDataSource() {
     }
 }
 
-module.exports = MockPersistentDataSource
+module.exports = MockPersistentDataLayer

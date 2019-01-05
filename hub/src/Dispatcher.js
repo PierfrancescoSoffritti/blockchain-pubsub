@@ -1,18 +1,18 @@
 function Dispatcher(connectedClients, SEPARATOR) {
-    this.dispatch = function(fullMessage) {
-        const {recipient, payload} = fullMessage
+    this.dispatch = function(message) {
+        const {recipientId} = message
 
-        if(recipient === '*')
-            broadcast(payload);
-        else if(connectedClients[recipient])
-            connectedClients[recipient].write( JSON.stringify(payload) +SEPARATOR );
+        if(recipientId === '*')
+            broadcast(message);
+        else if(connectedClients[recipientId])
+            connectedClients[recipientId].write( JSON.stringify(message) +SEPARATOR );
         else
-            console.error(`Can't dispatch message: ${fullMessage}`);
+            console.error(`[DISPATCHER] Can't dispatch message: ${message}`);
     }
 
-    function broadcast(payload) {
+    function broadcast(message) {
         for (let clientId in connectedClients)
-            connectedClients[clientId].write( JSON.stringify(payload) +SEPARATOR );
+            connectedClients[clientId].write( JSON.stringify(message) +SEPARATOR );
     }
 }
 
