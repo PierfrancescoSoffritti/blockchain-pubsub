@@ -1,4 +1,4 @@
-const hyperledgerFabric = require('blockchain-pubsub-hyperledger-fabric-interface')
+const hyperledgerFabric = require('blockchain-pubsub-hyperledger-fabric-adapter')
 const PersistentDataSourcePubSub = require('pubsub')
 
 async function test() {

@@ -4,11 +4,17 @@
     "description": "hub of distributed pubsub application",
     "main": "test.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
+        "test": "find ./tests -name '*_test.js' | xargs mocha -R spec",
         "startFabric": "./node_modules/blockchain-pubsub-hyperledger-fabric-adapter/startFabric.sh node"
     },
     "dependencies": {
         "blockchain-pubsub-hyperledger-fabric-adapter": "file:../blockchain/hyperledgerFabric",
         "pubsub": "file:../pubsub"
+    },
+    "devDependencies": {
+        "blockchain-pubsub-utils": "file:../utils",
+        "chai": "^4.2.0",
+        "mocha": "^5.2.0",
+        "sinon": "^7.2.2"
     }
 }

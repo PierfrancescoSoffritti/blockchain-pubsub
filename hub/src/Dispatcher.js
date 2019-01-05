@@ -11,8 +11,8 @@ function Dispatcher(connectedClients, SEPARATOR) {
     }
 
     function broadcast(payload) {
-        for (let actorId in connectedClients)
-            connectedClients[actorId].write( JSON.stringify(payload) +SEPARATOR );
+        for (let clientId in connectedClients)
+            connectedClients[clientId].write( JSON.stringify(payload) +SEPARATOR );
     }
 }
 
