@@ -5,4 +5,4 @@ env:
  - TEST_DIR=pubsub
  - TEST_DIR=utils
  - TEST_DIR=hub
-script: cd $TEST_DIR && npm install && npm test
+script: cd $TEST_DIR && npm install --only=dev && npm test
