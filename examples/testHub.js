@@ -9,12 +9,12 @@ async function test() {
 
     const tcpClient1 = new TCPClient(
         "client1",
-        { onMessageReceived: message => { console.log(`[CLIENT1] message received ${message}`) } }
+        { onMessageReceived: message => { console.log(`[CLIENT1] message received ${JSON.stringify(message)}`) } }
     )
 
     const tcpClient2 = new TCPClient(
         "client2",
-        { onMessageReceived: message => { console.log(`[CLIENT2] message received ${message}`) } }
+        { onMessageReceived: message => { console.log(`[CLIENT2] message received ${JSON.stringify(message)}`) } }
     )
 
     hub.start({ port: 8900 })
@@ -33,11 +33,11 @@ async function test() {
     tcpClient1.send({ recipientId: "client2", isPersistent: true, payload: "message #1" })
     console.log("message sent")
 
-    await wait(100)
+    await wait(10000)
 
     tcpClient1.finish()
     tcpClient2.finish()
-    // hub.close()
+    hub.close()
 }
 
 test()

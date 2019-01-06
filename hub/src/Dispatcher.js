@@ -7,7 +7,7 @@ function Dispatcher(connectedClients, SEPARATOR) {
         else if(connectedClients[recipientId])
             connectedClients[recipientId].write( JSON.stringify(message) +SEPARATOR );
         else
-            console.error(`[DISPATCHER] Can't dispatch message: ${message}`);
+            console.error(`[DISPATCHER] Can't dispatch message: ${JSON.stringify(message)}`);
     }
 
     function broadcast(message) {

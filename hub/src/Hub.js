@@ -2,11 +2,11 @@ const net = require('net')
 const PersistentDataSourcePubSub = require('pubsub')
 const Dispatcher = require('./Dispatcher')
 
-const SEPARATOR = "$$SEP$$"
-const connecetClients = {}
-
 function Hub(hubId, persistendDataLayer) {
     let server
+
+    const SEPARATOR = "$$SEP$$"
+    const connecetClients = {}
 
     const persistentPubSub = new PersistentDataSourcePubSub(hubId, persistendDataLayer)
     const clientDispatcher = new Dispatcher(connecetClients, SEPARATOR)
@@ -34,8 +34,8 @@ function Hub(hubId, persistendDataLayer) {
                     }
                 }
             })    
-            socket.on('end', () => { delete connecetClients[clientId] })    
-            socket.on('error', () => { delete connecetClients[clientId] })    
+            socket.on('end', () => { delete connecetClients[clientId]; console.log("disconnected" +clientId) })    
+            socket.on('error', () => { delete connecetClients[clientId]; console.log("disconnected" +clientId) })
         })
     
         server.listen(port)
