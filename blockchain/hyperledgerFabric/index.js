@@ -24,6 +24,9 @@ async function init(adminUserName, userName) {
     return userPublicKey
 }
 
+/**
+ * returns: [ { id: "..", content: { .. } } ]
+ */
 async function queryRange(queryLowerBound, queryUpperBound) {
     if(!isInitCompleted)
         throw "Init not completed"
@@ -32,9 +35,15 @@ async function queryRange(queryLowerBound, queryUpperBound) {
     return parseQueryResult(res)
 }
 
+/**
+ * message format: { id: "..", content: { .. } }
+ */
 async function persist(message) {
     if(!isInitCompleted)
         throw "Init not completed"
+    
+    if(!message.id || !message.content) 
+        throw `Wrong message format. Can't persist message ${message}. Expected "id" and "content" properties.`
 
     return await Invoke(registeredUserName, message)
 }
@@ -52,8 +61,11 @@ function parseQueryResult(response) {
         final response format: [ { id: "..", content: { .. } } ]
     */
 
-   const parsedData = JSON.parse(response).map( data => { return { id: data["Key"], content: data["Record"] } } )
-   return parsedData
+    const parsedData = JSON.parse(response)
+        .map( data => { return { id: data["Key"], content: data["Record"] } } )
+        .map( data => { return { id: data.id, content: JSON.parse(data.content) } } )
+        
+    return parsedData
 }
 
 module.exports = { init, queryRange, persist, onDataPersisted }

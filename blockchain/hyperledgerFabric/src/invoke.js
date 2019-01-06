@@ -20,8 +20,11 @@ const storePath = path.join(__dirname, '/../hfc-key-store');
 
 async function Invoke(userName, message) {
 	try {
+		
 		if(!userName)
-            throw new Error("Wrong arguments. User name is missing")
+			throw new Error("Wrong arguments. User name is missing")		
+		if(!message || !message.id || !message.content) 
+			throw `Wrong arguments. Expected a message object with "id" and "content" properties.`
 
 		await HyperledgerUtils.initClient( FabricClient, fabricClient, storePath );
 		await HyperledgerUtils.checkUserIsEnrolled( fabricClient, userName )
@@ -31,7 +34,7 @@ async function Invoke(userName, message) {
 			//targets: default to the peer assigned to the client
 			chaincodeId: 'IOchannel',
 			fcn: 'putMessage',
-			args: [message.id, userName, message.content],
+			args: [message.id, JSON.stringify(message.content)],
 			chainId: 'mychannel',
 			txId: transactionId
 		};

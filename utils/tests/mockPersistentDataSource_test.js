@@ -29,6 +29,28 @@ describe('MockPersistentDataLayer', () => {
         })
     })
 
+    describe('real use case', () => {
+        it('persist complex message', async () => {
+            // 1. ARRANGE
+            const datasource = new MockPersistentDataLayer()
+
+            // 2. ACT
+            datasource.persist( { id: "MSG0", content: { aString: "message #1", aNumber: 1 } } )
+
+            // 3. ASSERT
+            const result = await datasource.queryRange("MSG0", "MSG9")
+
+            expect(result.length).to.be.equal(1)
+            expect(result[0]).to.have.property("id", "MSG0")
+            expect(result[0]).to.have.property("content")
+
+            const content = result[0].content
+
+            expect(content).to.have.property("aString", "message #1")
+            expect(content).to.have.property("aNumber", 1)
+        })
+    })
+
     describe('queryRange', () => {
         it('data is in range test', async () => {
             

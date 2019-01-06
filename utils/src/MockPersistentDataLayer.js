@@ -13,6 +13,9 @@ function MockPersistentDataLayer() {
             timeoutId = setTimeout(() => { onNewDataPersisted(); timeoutId = -1 }, 5)
     }
 
+    /**
+    * returns: [ { id: "..", content: { .. } } ]
+    */
     this.queryRange = async function(queryLowerBound, queryUpperBound) {
      
         const queryLowerBoundNumber = Number(queryLowerBound.replace("MSG", ""))
