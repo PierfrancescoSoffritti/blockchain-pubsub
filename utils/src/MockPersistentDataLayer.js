@@ -4,25 +4,29 @@ function MockPersistentDataLayer() {
 
     let timeoutId = -1
 
-    let onNewDataPersisted = () => {}
+    // one for each pubsub subscribed on this data layer
+    let onNewDataPersistedListeners = []
 
     this.persist = async function(message) {
         data[message.id] = message.content
 
         if(timeoutId === -1)
-            timeoutId = setTimeout(() => { onNewDataPersisted(); timeoutId = -1 }, 5)
+            timeoutId = setTimeout(() => { onNewDataPersistedListeners.forEach(listener => listener()); timeoutId = -1 }, 5)
     }
 
     /**
     * returns: [ { id: "..", content: { .. } } ]
     */
     this.queryRange = async function(queryLowerBound, queryUpperBound) {
+
+        const prefix = queryLowerBound.replace(/\d+$/, "")
      
-        const queryLowerBoundNumber = Number(queryLowerBound.replace("MSG", ""))
-        const queryUpperBoundNumber = Number(queryUpperBound.replace("MSG", ""))
+        const queryLowerBoundNumber = Number(queryLowerBound.replace(prefix, ""))
+        const queryUpperBoundNumber = Number(queryUpperBound.replace(prefix, ""))
 
         const keys = Object.keys(data)
-            .map(key => { return { key, number: Number( key.replace("MSG", "").split("-")[0] ) } } )
+            .filter(key => key.startsWith(prefix))
+            .map(key => { return { key, number: Number( key.replace(prefix, "").split("-")[0] ) } } )
             .filter(key => ( key.number >= queryLowerBoundNumber && key.number <= queryUpperBoundNumber ) )
             .map( key => key.key)
         
@@ -33,7 +37,7 @@ function MockPersistentDataLayer() {
     }
 
     this.onDataPersisted = async function(onDataPersistedListener) {
-        onNewDataPersisted = onDataPersistedListener
+        onNewDataPersistedListeners.push(onDataPersistedListener)
         return { disconnect: () => {} }
     }
 

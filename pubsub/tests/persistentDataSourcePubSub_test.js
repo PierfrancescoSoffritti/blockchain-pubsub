@@ -115,7 +115,7 @@ describe('PersistentDataSourcePubSub', () => {
             callback.withArgs("message #1").returns(1)
             callback.withArgs("message #2").returns(2)
             callback.withArgs("message #3").returns(3)
-            callback.returns(0)
+            callback.returns(-1)
 
             pubsub1.onNewMessage(callback)
 
@@ -142,7 +142,7 @@ describe('PersistentDataSourcePubSub', () => {
                 callback.withArgs("message #1").returns(1)
                 callback.withArgs("message #2").returns(2)
                 callback.withArgs(`message #${i}`).returns(i)
-                callback.returns(0)
+                callback.returns(-1)
                 pubsub.onNewMessage(callback)
 
                 // 2. ACT
@@ -172,7 +172,7 @@ describe('PersistentDataSourcePubSub', () => {
                 callback.withArgs("message #1").returns(1)
                 callback.withArgs("message #2").returns(2)
                 callback.withArgs(`message #${i}`).returns(i)
-                callback.returns(0)
+                callback.returns(-1)
                 pubsub1.onNewMessage(callback)
 
                 // 2. ACT
@@ -186,6 +186,37 @@ describe('PersistentDataSourcePubSub', () => {
             }
 
             expect(persistentData.getDataArray().length).to.be.equal(10)
+        })
+
+        it('receives data only from topic of interest test', async () => {
+            // 1. ARRANGE
+            const persistentData = new MockPersistentDataLayer()
+            const pubsub1 = new PersistentDataSourcePubSub(1, persistentData)
+            const pubsub2 = new PersistentDataSourcePubSub(2, persistentData, { messagesIdPrefix: "TEST" } )
+
+            const callback1 = sinon.stub()
+            callback1.withArgs("message #1").returns(1)
+            callback1.withArgs("message #2").returns(2)
+            callback1.withArgs("message #3").returns(3)
+            callback1.returns(-1)
+
+            const callback2 = sinon.stub()
+            callback2.withArgs("message #1").returns(1)
+            callback2.withArgs("message #2").returns(2)
+            callback2.withArgs("message #3").returns(3)
+            callback2.returns(-1)
+
+            pubsub1.onNewMessage(callback1)
+            pubsub2.onNewMessage(callback2)
+
+            // 2. ACT
+            await pubsub1.sendMessage("message #1")
+            await pubsub2.sendMessage("message #2")
+
+            // 3. ASSERT
+            await wait(6)
+            expect(callback1.returnValues).to.have.members([1])
+            expect(callback2.returnValues).to.have.members([2])
         })
     })
 })

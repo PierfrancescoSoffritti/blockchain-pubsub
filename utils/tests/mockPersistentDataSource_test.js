@@ -17,7 +17,19 @@ describe('MockPersistentDataLayer', () => {
             expect(datasource.data["MSG0"]).to.be.equal("message #1")
         })
 
-        it('not persisted message is not persisted test', () => {
+        it('persisted message is persisted (different ID) test', () => {
+            
+            // 1. ARRANGE
+            const datasource = new MockPersistentDataLayer()
+
+            // 2. ACT
+            datasource.persist({ id: "TEST0", content: "message #1" })
+
+            // 3. ASSERT
+            expect(datasource.data["TEST0"]).to.be.equal("message #1")
+        })
+
+        it('not persisted message is undefined test', () => {
             
             // 1. ARRANGE
             const datasource = new MockPersistentDataLayer()
@@ -42,6 +54,26 @@ describe('MockPersistentDataLayer', () => {
 
             expect(result.length).to.be.equal(1)
             expect(result[0]).to.have.property("id", "MSG0")
+            expect(result[0]).to.have.property("content")
+
+            const content = result[0].content
+
+            expect(content).to.have.property("aString", "message #1")
+            expect(content).to.have.property("aNumber", 1)
+        })
+
+        it('persist complex message (different ID)', async () => {
+            // 1. ARRANGE
+            const datasource = new MockPersistentDataLayer()
+
+            // 2. ACT
+            datasource.persist( { id: "TEST0", content: { aString: "message #1", aNumber: 1 } } )
+
+            // 3. ASSERT
+            const result = await datasource.queryRange("TEST0", "TEST9")
+
+            expect(result.length).to.be.equal(1)
+            expect(result[0]).to.have.property("id", "TEST0")
             expect(result[0]).to.have.property("content")
 
             const content = result[0].content
@@ -109,6 +141,35 @@ describe('MockPersistentDataLayer', () => {
             expect(res[0].content).to.be.equal("message #2")
             expect(res[1].id).to.be.equal("MSG1")
             expect(res[1].content).to.be.equal("message #3")
+        })
+
+        it('multiple results and multiple IDs test', async () => {
+            
+            // 1. ARRANGE
+            const datasource = new MockPersistentDataLayer()
+            datasource.data["MSG0"] = "message #1"
+            datasource.data["MSG0"] = "message #2"
+            datasource.data["MSG1"] = "message #3"
+            datasource.data["TEST0"] = "message #1"
+            datasource.data["TEST0"] = "message #2"
+            datasource.data["TEST1"] = "message #3"
+
+            // 2. ACT
+            const resMSG = await datasource.queryRange("MSG0", "MSG99")
+            const resTEST = await datasource.queryRange("TEST0", "TEST99")
+
+            // 3. ASSERT
+            expect(resMSG.length).to.be.equal(2)
+            expect(resMSG[0].id).to.be.equal("MSG0")
+            expect(resMSG[0].content).to.be.equal("message #2")
+            expect(resMSG[1].id).to.be.equal("MSG1")
+            expect(resMSG[1].content).to.be.equal("message #3")
+
+            expect(resTEST.length).to.be.equal(2)
+            expect(resTEST[0].id).to.be.equal("TEST0")
+            expect(resTEST[0].content).to.be.equal("message #2")
+            expect(resTEST[1].id).to.be.equal("TEST1")
+            expect(resTEST[1].content).to.be.equal("message #3")
         })
 
         it('complex id test', async () => {
