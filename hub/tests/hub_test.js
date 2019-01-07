@@ -273,10 +273,10 @@ describe('Hub', () => {
             hub.close()
 
             // 3. ASSERT
-            // expect(onMessageReceived1.calledOnce).to.be.true
+            expect(onMessageReceived1.calledOnce).to.be.true
             expect(onMessageReceived1.calledWith({ senderId: "client1", recipientId: "*", isPersistent: false, payload: "message #1" })).to.be.true
 
-            // expect(onMessageReceived2.calledOnce).to.be.true
+            expect(onMessageReceived2.calledOnce).to.be.true
             expect(onMessageReceived2.calledWith({ senderId: "client1", recipientId: "*", isPersistent: false, payload: "message #1" })).to.be.true
         })
     })

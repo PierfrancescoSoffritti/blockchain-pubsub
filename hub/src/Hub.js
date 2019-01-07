@@ -100,11 +100,25 @@ function Hub(hubId, persistendDataLayer) {
             const { ip: hubIp, port: hubPort } = clientsGlobalMap[message.recipientId]
             sendUDPMessage(hubPort, hubIp, messageBuffer)
         } else {
-            Object.keys(clientsGlobalMap).forEach(key => {
-                const { ip: hubIp, port: hubPort } = clientsGlobalMap[key]                
+            const uniqueAddressesList = getUniqueValues(clientsGlobalMap)
+
+            uniqueAddressesList.forEach(item => {
+                const { ip: hubIp, port: hubPort } = item                
                 sendUDPMessage(hubPort, hubIp, messageBuffer)
             })
         }        
+    }
+
+    function getUniqueValues(object) {
+        const values = Object.keys(object).map(key => object[key])
+        const set = new Set()
+        const uniqueValues = values.filter(item => {
+            if( set.has(JSON.stringify(item)) ) return false
+            set.add(JSON.stringify(item))
+            return true
+        })
+
+        return uniqueValues
     }
 
     function getSenderId(message) {
