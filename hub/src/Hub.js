@@ -15,8 +15,8 @@ function Hub(hubId, persistendDataLayer) {
     // maps clientId to socket
     const clientsLocalMap = {}
 
-    const clientsConnectionsPubSub = new PersistentDataSourcePubSub(hubId, persistendDataLayer, { topic: "CONNECTED" })
-    const messagesPubSub = new PersistentDataSourcePubSub(hubId, persistendDataLayer, { topic: "MSG" })
+    const clientsConnectionsPubSub = new PersistentDataSourcePubSub(hubId, persistendDataLayer, { topic: "CONNECTEDqdddfwwdfddfsdfwer" })
+    const messagesPubSub = new PersistentDataSourcePubSub(hubId, persistendDataLayer, { topic: "MSGqweqwddfdfdfdfsdwdwe" })
     
     let connectionsPubSubConnection
     let messagesPubSubConnection

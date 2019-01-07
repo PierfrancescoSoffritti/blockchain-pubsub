@@ -30,16 +30,15 @@ describe('Hub', function() {
             hub.start({ publicAddress: 'localhost', tcpPort: 8900, udpPort: 9000 })
             await wait(2000)
 
-            clientSender.connectTo({ port: 8900, ip: "localhost"})
-            clientReceiver.connectTo({ port: 8900, ip: "localhost"})
-            await wait(2000)
+            await clientSender.connectTo({ port: 8900, ip: "localhost"})
+            await clientReceiver.connectTo({ port: 8900, ip: "localhost"})
 
             clientSender.send({
                 recipientId: "clientReceiver",
                 isPersistent: true,
                 payload: { aString: "sometext", aNum: 1, anObject: { prop1: "value", prop2: 1 } }
             })
-            await wait(5000)
+            await wait(10000)
 
             clientSender.finish()
             clientReceiver.finish()

@@ -12,27 +12,33 @@ function TCPClient(
     const outQueue = []
     
     this.connectTo = function({ port, ip }) {
-        const client = new net.Socket()
-        clientSocket = client
+        return new Promise((resolve, reject) => {
 
-        client.connect({ port, ip }, onConnecting )
+            const client = new net.Socket()
+            clientSocket = client
 
-        client.on('connect', () => {
-            onConnected()
+            client.connect({ port, ip }, onConnecting )
 
-            self.send({ senderId: clientId })
-            flushOutQueue()
+            client.on('connect', () => {
+                resolve()
+
+                onConnected()
+
+                self.send({ senderId: clientId })
+                flushOutQueue()
+            })
+
+            client.on('data', message => {
+                String(message).split(SEPARATOR)
+                    .filter(string => string.trim().length !== 0)
+                    .map(message => JSON.parse(message))
+                    .forEach(message => onMessageReceived(message) )
+            })
+            
+            client.on('close', () => { onConnectionClosed(); resolve(); } )
+            client.on('error', () => { onError(); reject(); } )
+
         })
-
-        client.on('data', message => {
-            String(message).split(SEPARATOR)
-                .filter(string => string.trim().length !== 0)
-                .map(message => JSON.parse(message))
-                .forEach(message => onMessageReceived(message) )
-        })
-        
-        client.on('close', onConnectionClosed )
-        client.on('error', onError )
     }
 
     this.send = function(message) {        
