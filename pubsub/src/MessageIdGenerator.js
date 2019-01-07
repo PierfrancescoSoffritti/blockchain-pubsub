@@ -1,5 +1,8 @@
 function MessageIdGenerator(messageIdPrefix) {
-    const self = this;
+    const self = this
+
+    if(messageIdPrefix.match(/[0-9]$/))
+        throw `MessageId prefix cannot end with a number. ${messageIdPrefix} is not valid.`
 
     /**
      * ids are generated in lexographical order. eg nextMessageId("MSG9") = "MSG90"

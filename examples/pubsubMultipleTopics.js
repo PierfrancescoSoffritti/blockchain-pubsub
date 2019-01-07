@@ -33,6 +33,9 @@ async function test() {
     console.log(`[TOPIC_ONE query res]: ${JSON.stringify(resTopicOne)}`)
     console.log(`[TOPIC_TWO query res]: ${JSON.stringify(resTopicTwo)}`)
 
+    await wait(100)
+    console.log("\n")
+    
     connection1.disconnect()
     connection2.disconnect()
 }

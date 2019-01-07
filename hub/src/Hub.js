@@ -8,42 +8,41 @@ function Hub(hubId, persistendDataLayer) {
     const SEPARATOR = "$$SEP$$"
     const connecetClients = {}
 
-    const persistentPubSub = new PersistentDataSourcePubSub(hubId, persistendDataLayer)
+    const persistentPubSub = new PersistentDataSourcePubSub(hubId, persistendDataLayer, { messagesIdPrefix: "MSG" })
     const clientDispatcher = new Dispatcher(connecetClients, SEPARATOR)
 
     let persistendPubSubConnection
 
     this.start = async function({ port }) {
-
         persistendPubSubConnection = await persistentPubSub.onNewMessage(message => clientDispatcher.dispatch(message))
-
-        server = net.createServer( socket => {
-            let clientId
-
-            socket.on('data', message => {
-                if(clientId) {
-                    onNewMessageFromClient(message)
-                } else {
-                    clientId = getSenderId(message)
-                    
-                    if(connecetClients[clientId]) {
-                        socket.write( JSON.stringify(`A client with id ${clientId} is already connected`) +SEPARATOR )
-                        socket.end()
-                    } else {
-                        connecetClients[clientId] = socket
-                    }
-                }
-            })    
-            socket.on('end', () => { delete connecetClients[clientId]; console.log("disconnected" +clientId) })    
-            socket.on('error', () => { delete connecetClients[clientId]; console.log("disconnected" +clientId) })
-        })
-    
+        server = net.createServer( socket => onClientConnected(socket))    
         server.listen(port)
     }
 
     this.close = function() {
         server.close()
         persistendPubSubConnection.disconnect()
+    }
+
+    function onClientConnected(socket) {
+        let clientId
+
+        socket.on('data', message => {
+            if(clientId) {
+                onNewMessageFromClient(message)
+            } else {
+                clientId = getSenderId(message)
+                
+                if(connecetClients[clientId]) {
+                    socket.write( JSON.stringify(`A client with id ${clientId} is already connected`) +SEPARATOR )
+                    socket.end()
+                } else {
+                    connecetClients[clientId] = socket
+                }
+            }
+        })    
+        socket.on('end', () => delete connecetClients[clientId] )
+        socket.on('error', () => delete connecetClients[clientId] )
     }
     
     function onNewMessageFromClient(message) {

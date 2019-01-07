@@ -1,7 +1,17 @@
 const expect = require('chai').expect
 const MessageIdGenerator = require('../src/MessageIdGenerator')
 
-describe("MessageIdGenerator", () => {
+describe("MessageIdGenerator", () => {    
+    
+    describe('constructor', () => {
+        it('throws when prefix ends with number test', () => {
+            // 1. ARRANGE
+            // 2. ACT
+            // 3. ASSERT
+            expect(() => new MessageIdGenerator("MSG1")).to.throw()
+        })
+    })
+
     describe('nextMessageId', () => {
         it('base test', () => {
             
