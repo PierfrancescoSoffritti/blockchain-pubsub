@@ -1,12 +1,12 @@
 const MessageIdGenerator = require('./MessageIdGenerator')
 
-function PersistentDataSourcePubSub(hubId, persistentDataLayer, { messagesIdPrefix = "MSG" } = { } ) {
-    const messageIdGenerator = new MessageIdGenerator(messagesIdPrefix)
+function PersistentDataSourcePubSub(hubId, persistentDataLayer, { topic = "MSG" } = { } ) {
+    const messageIdGenerator = new MessageIdGenerator(topic)
 
     const onNewMessageListeners = []
 
-    let lastSentMessageId = `${messagesIdPrefix}0`
-    let lastQueryMessageId = `${messagesIdPrefix}0`
+    let lastSentMessageId = `${topic}0`
+    let lastQueryMessageId = `${topic}0`
 
     const dataLayerSubscriptionPromise = subscribeToDataLayer()
 

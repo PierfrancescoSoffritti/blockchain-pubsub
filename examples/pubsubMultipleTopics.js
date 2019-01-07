@@ -6,8 +6,8 @@ async function test() {
 
     const hubId = await hyperledgerFabric.init("admin", "user1")
 
-    const pubsub1 = new PersistentDataSourcePubSub(hubId, hyperledgerFabric, { messagesIdPrefix: "TOPIC_ONE" })
-    const pubsub2 = new PersistentDataSourcePubSub(hubId, hyperledgerFabric, { messagesIdPrefix: "TOPIC_TWO" })
+    const pubsub1 = new PersistentDataSourcePubSub(hubId, hyperledgerFabric, { topic: "TOPIC_ONE" })
+    const pubsub2 = new PersistentDataSourcePubSub(hubId, hyperledgerFabric, { topic: "TOPIC_TWO" })
 
     await wait(100)
 

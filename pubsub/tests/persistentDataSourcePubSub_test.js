@@ -192,7 +192,7 @@ describe('PersistentDataSourcePubSub', () => {
             // 1. ARRANGE
             const persistentDatalayer = new MockPersistentDataLayer()
             const pubsub1 = new PersistentDataSourcePubSub(1, persistentDatalayer)
-            const pubsub2 = new PersistentDataSourcePubSub(2, persistentDatalayer, { messagesIdPrefix: "TEST" } )
+            const pubsub2 = new PersistentDataSourcePubSub(2, persistentDatalayer, { topic: "TEST" } )
 
             const callback1 = sinon.stub()
             callback1.withArgs("message #1").returns(1)
