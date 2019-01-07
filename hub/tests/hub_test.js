@@ -105,6 +105,42 @@ describe('Hub', () => {
             expect(onMessageReceived.calledWith({ senderId: "client1", recipientId: "client1", isPersistent: true, payload: "message #1" })).to.be.true
         })
 
+        it('message with complex payload test', async () => {
+            
+            // 1. ARRANGE
+            const datalayer = new MockPersistentDataLayer()
+            const hub = new Hub("hub0", datalayer)
+
+            const onMessageReceived = sinon.stub()
+
+            const tcpClient = new TCPClient(
+                "client1",
+                { onMessageReceived }
+            )
+
+            // 2. ACT
+            hub.start({ publicAddress: 'localhost', tcpPort: 8900, udpPort: 9000 })
+            tcpClient.connectTo({ port: 8900, ip: "localhost"})
+            await wait(5)
+            tcpClient.send({
+                recipientId: "client1",
+                isPersistent: true,
+                payload: { aString: "sometext", aNum: 1, anObject: { prop1: "value", prop2: 1 } }
+            })
+            await wait(10)
+            tcpClient.finish()
+            hub.close()
+
+            // 3. ASSERT
+            expect(onMessageReceived.calledOnce).to.be.true;
+            expect(onMessageReceived.calledWith({
+                senderId: "client1",
+                recipientId: "client1",
+                isPersistent: true,
+                payload: { aString: "sometext", aNum: 1, anObject: { prop1: "value", prop2: 1 } }
+            })).to.be.true
+        })
+
         it('message delivered to different client test', async () => {
             // 1. ARRANGE
             const datalayer = new MockPersistentDataLayer()
@@ -205,6 +241,42 @@ describe('Hub', () => {
             // 3. ASSERT
             expect(onMessageReceived.calledOnce).to.be.true;
             expect(onMessageReceived.calledWith({ senderId: "client1", recipientId: "client1", isPersistent: false, payload: "message #1" })).to.be.true
+        })
+
+        it('message with complex payload test', async () => {
+            
+            // 1. ARRANGE
+            const datalayer = new MockPersistentDataLayer()
+            const hub = new Hub("hub0", datalayer)
+
+            const onMessageReceived = sinon.stub()
+
+            const tcpClient = new TCPClient(
+                "client1",
+                { onMessageReceived }
+            )
+
+            // 2. ACT
+            hub.start({ publicAddress: 'localhost', tcpPort: 8900, udpPort: 9000 })
+            tcpClient.connectTo({ port: 8900, ip: "localhost"})
+            await wait(5)
+            tcpClient.send({
+                recipientId: "client1",
+                isPersistent: false,
+                payload: { aString: "sometext", aNum: 1, anObject: { prop1: "value", prop2: 1 } }
+            })
+            await wait(10)
+            tcpClient.finish()
+            hub.close()
+
+            // 3. ASSERT
+            expect(onMessageReceived.calledOnce).to.be.true;
+            expect(onMessageReceived.calledWith({
+                senderId: "client1",
+                recipientId: "client1",
+                isPersistent: false,
+                payload: { aString: "sometext", aNum: 1, anObject: { prop1: "value", prop2: 1 } }
+            })).to.be.true
         })
 
         it('message delivered to different client test', async () => {

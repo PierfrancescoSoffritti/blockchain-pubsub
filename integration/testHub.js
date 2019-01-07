@@ -31,9 +31,10 @@ async function test() {
     await wait(100)
 
     tcpClient1.send({ recipientId: "client2", isPersistent: true, payload: "message #1" })
+    tcpClient1.send({ recipientId: "client2", isPersistent: true, payload: { aString: "sometext", aNum: 1, anObject: { prop1: "value", prop2: 1 } } })
     console.log("message sent")
 
-    await wait(10000)
+    await wait(1000)
 
     tcpClient1.finish()
     tcpClient2.finish()
