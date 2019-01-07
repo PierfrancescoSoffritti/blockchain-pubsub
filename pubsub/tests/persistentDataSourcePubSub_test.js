@@ -9,24 +9,24 @@ describe('PersistentDataSourcePubSub', () => {
             
             // 1. ARRANGE
             const pubsubId = 1
-            const persistentData = new MockPersistentDataLayer()
-            const pubsub = new PersistentDataSourcePubSub(pubsubId, persistentData)
+            const persistentDatalayer = new MockPersistentDataLayer()
+            const pubsub = new PersistentDataSourcePubSub(pubsubId, persistentDatalayer)
 
             // 2. ACT
             await pubsub.sendMessage("message #1")
 
             // 3. ASSERT
-            expect(persistentData.getDataArray().length).to.be.equal(1)
-            expect(persistentData.getDataArray()[0].id).to.be.equal(`MSG1-${pubsubId}`)
-            expect(persistentData.getDataArray()[0].content).to.be.equal(`message #1`)
+            expect(persistentDatalayer.getDataArray().length).to.be.equal(1)
+            expect(persistentDatalayer.getDataArray()[0].id).to.be.equal(`MSG1-${pubsubId}`)
+            expect(persistentDatalayer.getDataArray()[0].content).to.be.equal(`message #1`)
         })
 
         it('multiple messages test', async () => {
             
             // 1. ARRANGE
             const pubsubId = 1
-            const persistentData = new MockPersistentDataLayer()
-            const pubsub = new PersistentDataSourcePubSub(pubsubId, persistentData)
+            const persistentDatalayer = new MockPersistentDataLayer()
+            const pubsub = new PersistentDataSourcePubSub(pubsubId, persistentDatalayer)
 
             // 2. ACT
             await pubsub.sendMessage("message #1")
@@ -34,13 +34,13 @@ describe('PersistentDataSourcePubSub', () => {
             await pubsub.sendMessage("message #3")
 
             // 3. ASSERT
-            expect(persistentData.getDataArray().length).to.be.equal(3)
-            expect(persistentData.getDataArray()[0].id).to.be.equal(`MSG1-${pubsubId}`)
-            expect(persistentData.getDataArray()[0].content).to.be.equal(`message #1`)
-            expect(persistentData.getDataArray()[1].id).to.be.equal(`MSG2-${pubsubId}`)
-            expect(persistentData.getDataArray()[1].content).to.be.equal(`message #2`)
-            expect(persistentData.getDataArray()[2].id).to.be.equal(`MSG3-${pubsubId}`)
-            expect(persistentData.getDataArray()[2].content).to.be.equal(`message #3`)
+            expect(persistentDatalayer.getDataArray().length).to.be.equal(3)
+            expect(persistentDatalayer.getDataArray()[0].id).to.be.equal(`MSG1-${pubsubId}`)
+            expect(persistentDatalayer.getDataArray()[0].content).to.be.equal(`message #1`)
+            expect(persistentDatalayer.getDataArray()[1].id).to.be.equal(`MSG2-${pubsubId}`)
+            expect(persistentDatalayer.getDataArray()[1].content).to.be.equal(`message #2`)
+            expect(persistentDatalayer.getDataArray()[2].id).to.be.equal(`MSG3-${pubsubId}`)
+            expect(persistentDatalayer.getDataArray()[2].content).to.be.equal(`message #3`)
         })
 
         it('multiple sources test', async () => {
@@ -48,9 +48,9 @@ describe('PersistentDataSourcePubSub', () => {
             // 1. ARRANGE
             const pubsubId1 = 1
             const pubsubId2 = 2
-            const persistentData = new MockPersistentDataLayer()
-            const pubsub1 = new PersistentDataSourcePubSub(pubsubId1, persistentData)
-            const pubsub2 = new PersistentDataSourcePubSub(pubsubId2, persistentData)
+            const persistentDatalayer = new MockPersistentDataLayer()
+            const pubsub1 = new PersistentDataSourcePubSub(pubsubId1, persistentDatalayer)
+            const pubsub2 = new PersistentDataSourcePubSub(pubsubId2, persistentDatalayer)
 
             // 2. ACT
             await pubsub1.sendMessage("message #1")
@@ -58,13 +58,13 @@ describe('PersistentDataSourcePubSub', () => {
             await pubsub1.sendMessage("message #3")
 
             // 3. ASSERT
-            expect(persistentData.getDataArray().length).to.be.equal(3)
-            expect(persistentData.getDataArray()[0].id).to.be.equal(`MSG1-${pubsubId1}`)
-            expect(persistentData.getDataArray()[0].content).to.be.equal(`message #1`)
-            expect(persistentData.getDataArray()[1].id).to.be.equal(`MSG1-${pubsubId2}`)
-            expect(persistentData.getDataArray()[1].content).to.be.equal(`message #2`)
-            expect(persistentData.getDataArray()[2].id).to.be.equal(`MSG2-${pubsubId1}`)
-            expect(persistentData.getDataArray()[2].content).to.be.equal(`message #3`)
+            expect(persistentDatalayer.getDataArray().length).to.be.equal(3)
+            expect(persistentDatalayer.getDataArray()[0].id).to.be.equal(`MSG1-${pubsubId1}`)
+            expect(persistentDatalayer.getDataArray()[0].content).to.be.equal(`message #1`)
+            expect(persistentDatalayer.getDataArray()[1].id).to.be.equal(`MSG1-${pubsubId2}`)
+            expect(persistentDatalayer.getDataArray()[1].content).to.be.equal(`message #2`)
+            expect(persistentDatalayer.getDataArray()[2].id).to.be.equal(`MSG2-${pubsubId1}`)
+            expect(persistentDatalayer.getDataArray()[2].content).to.be.equal(`message #3`)
         })
     })
 
@@ -72,8 +72,8 @@ describe('PersistentDataSourcePubSub', () => {
         it('base test', async () => {
             // 1. ARRANGE
             const pubsubId = 1
-            const persistentData = new MockPersistentDataLayer()
-            const pubsub = new PersistentDataSourcePubSub(pubsubId, persistentData)
+            const persistentDatalayer = new MockPersistentDataLayer()
+            const pubsub = new PersistentDataSourcePubSub(pubsubId, persistentDatalayer)
 
             const onNewMessage = sinon.fake()
             pubsub.onNewMessage(onNewMessage)
@@ -107,9 +107,9 @@ describe('PersistentDataSourcePubSub', () => {
             // 1. ARRANGE
             const pubsubId1 = 1
             const pubsubId2 = 2
-            const persistentData = new MockPersistentDataLayer()
-            const pubsub1 = new PersistentDataSourcePubSub(pubsubId1, persistentData)
-            const pubsub2 = new PersistentDataSourcePubSub(pubsubId2, persistentData)
+            const persistentDatalayer = new MockPersistentDataLayer()
+            const pubsub1 = new PersistentDataSourcePubSub(pubsubId1, persistentDatalayer)
+            const pubsub2 = new PersistentDataSourcePubSub(pubsubId2, persistentDatalayer)
 
             const callback = sinon.stub()
             callback.withArgs("message #1").returns(1)
@@ -132,8 +132,8 @@ describe('PersistentDataSourcePubSub', () => {
         it('only new data is emitted test', async () => {
             // 1. ARRANGE
             const pubsubId = 1
-            const persistentData = new MockPersistentDataLayer()
-            const pubsub = new PersistentDataSourcePubSub(pubsubId, persistentData)
+            const persistentDatalayer = new MockPersistentDataLayer()
+            const pubsub = new PersistentDataSourcePubSub(pubsubId, persistentDatalayer)
 
             for(let i=0; i<5; i++) {
                 // 1. ARRANGE
@@ -154,16 +154,16 @@ describe('PersistentDataSourcePubSub', () => {
                 expect(callback.returnValues).to.have.ordered.members([i])
             }
 
-            expect(persistentData.getDataArray().length).to.be.equal(5)
+            expect(persistentDatalayer.getDataArray().length).to.be.equal(5)
         })
 
         it('only new data is emitted (two publishers) test', async () => {
             // 1. ARRANGE
             const pubsubId1 = 1
             const pubsubId2 = 2
-            const persistentData = new MockPersistentDataLayer()
-            const pubsub1 = new PersistentDataSourcePubSub(pubsubId1, persistentData)
-            const pubsub2 = new PersistentDataSourcePubSub(pubsubId2, persistentData)
+            const persistentDatalayer = new MockPersistentDataLayer()
+            const pubsub1 = new PersistentDataSourcePubSub(pubsubId1, persistentDatalayer)
+            const pubsub2 = new PersistentDataSourcePubSub(pubsubId2, persistentDatalayer)
 
             for(let i=0; i<5; i++) {
                 // 1. ARRANGE
@@ -185,14 +185,14 @@ describe('PersistentDataSourcePubSub', () => {
                 expect(callback.returnValues).to.have.ordered.members([i, i])
             }
 
-            expect(persistentData.getDataArray().length).to.be.equal(10)
+            expect(persistentDatalayer.getDataArray().length).to.be.equal(10)
         })
 
         it('receives data only from topic of interest test', async () => {
             // 1. ARRANGE
-            const persistentData = new MockPersistentDataLayer()
-            const pubsub1 = new PersistentDataSourcePubSub(1, persistentData)
-            const pubsub2 = new PersistentDataSourcePubSub(2, persistentData, { messagesIdPrefix: "TEST" } )
+            const persistentDatalayer = new MockPersistentDataLayer()
+            const pubsub1 = new PersistentDataSourcePubSub(1, persistentDatalayer)
+            const pubsub2 = new PersistentDataSourcePubSub(2, persistentDatalayer, { messagesIdPrefix: "TEST" } )
 
             const callback1 = sinon.stub()
             callback1.withArgs("message #1").returns(1)
