@@ -6,7 +6,8 @@ const Dispatcher = require('./Dispatcher')
 const SEPARATOR = "$$SEP$$"
 
 function Hub(hubId, persistendDataLayer) {
-    let server, UDPserver
+    let hubDetails
+    let TCPserver, UDPserver
 
     // maps clientId to { ip, port }
     const clientsGlobalMap = { }
@@ -14,30 +15,52 @@ function Hub(hubId, persistendDataLayer) {
     // maps clientId to socket
     const clientsLocalMap = {}
 
-    const messagesPubSub = new PersistentDataSourcePubSub(hubId, persistendDataLayer, { topic: "MSG" })
     const clientsConnectionsPubSub = new PersistentDataSourcePubSub(hubId, persistendDataLayer, { topic: "CONNECTED" })
+    const messagesPubSub = new PersistentDataSourcePubSub(hubId, persistendDataLayer, { topic: "MSG" })
+    
+    let connectionsPubSubConnection
+    let messagesPubSubConnection
 
     const clientDispatcher = new Dispatcher(clientsLocalMap, SEPARATOR)
 
-    let connectionsPubSubConnection, messagesPubSubConnection
+    this.start = async function({ publicAddress, tcpPort, udpPort }) {
+        hubDetails = { publicAddress, tcpPort, udpPort }
 
-    this.start = async function({ port }) {
+        TCPserver = startTCPServer(tcpPort)
+        UDPserver = startUDPServer(udpPort)
+
         connectionsPubSubConnection = await clientsConnectionsPubSub.onNewMessage(message => clientsGlobalMap[message.clientId] = message.hubAddress)
         messagesPubSubConnection = await messagesPubSub.onNewMessage(message => clientDispatcher.dispatch(message))
-
-        server = net.createServer( socket => onClientConnected(socket))    
-        server.listen(port)
-        UDPserver = startUDPServer()
     }
 
     this.close = function() {
-        server.close()
+        TCPserver.close()
         UDPserver.close()
         connectionsPubSubConnection.disconnect()
         messagesPubSubConnection.disconnect()
     }
 
-    function onClientConnected(socket) {
+    function startTCPServer(port) {
+        const server = net.createServer( socket => onTCPClientConnected(socket))    
+        server.listen(port)
+        return server
+    }
+
+    function startUDPServer(port) {
+        const server = dgram.createSocket('udp4')
+
+        server.on('message', (message, remote) => {
+            message = String(message)
+            message = JSON.parse(message)
+            clientDispatcher.dispatch(message)
+        })
+
+        server.bind(port, "localhost")
+
+        return server
+    }
+
+    function onTCPClientConnected(socket) {
         let clientId
 
         socket.on('data', message => {
@@ -51,7 +74,7 @@ function Hub(hubId, persistendDataLayer) {
                     socket.end()
                 } else {
                     clientsLocalMap[clientId] = socket
-                    clientsConnectionsPubSub.sendMessage({ clientId, hubAddress: { ip: "localhost", port: 9000 } }) // hardcoded address
+                    clientsConnectionsPubSub.sendMessage({ clientId, hubAddress: { ip: hubDetails.publicAddress, port: hubDetails.udpPort } })
                 }
             }
         })    
@@ -70,29 +93,6 @@ function Hub(hubId, persistendDataLayer) {
             })
     }
 
-    function getSenderId(message) {
-        const msg = String(message)
-            .split(SEPARATOR)
-            .filter(string => string.trim().length !== 0)
-            .map(message => JSON.parse(message))[0]
-
-        return msg.senderId
-    }
-
-    function startUDPServer() {
-        const server = dgram.createSocket('udp4')
-
-        server.on('message', (message, remote) => {
-            message = String(message)
-            message = JSON.parse(message)
-            clientDispatcher.dispatch(message)
-        })
-
-        server.bind(9000, "localhost") // hardcoded!
-
-        return server
-    }
-
     function sendNonPersistentMessage(message) {
         const messageBuffer = new Buffer(JSON.stringify(message))
 
@@ -105,6 +105,15 @@ function Hub(hubId, persistendDataLayer) {
                 sendUDPMessage(hubPort, hubIp, messageBuffer)
             })
         }        
+    }
+
+    function getSenderId(message) {
+        const msg = String(message)
+            .split(SEPARATOR)
+            .filter(string => string.trim().length !== 0)
+            .map(message => JSON.parse(message))[0]
+
+        return msg.senderId
     }
 
     function sendUDPMessage(port, ip, buffer) {

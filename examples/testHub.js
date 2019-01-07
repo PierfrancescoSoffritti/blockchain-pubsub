@@ -17,7 +17,7 @@ async function test() {
         { onMessageReceived: message => { console.log(`[CLIENT2] message received ${JSON.stringify(message)}`) } }
     )
 
-    hub.start({ port: 8900 })
+    hub.start({ publicAddress: 'localhost', tcpPort: 8900, udpPort: 9000 })
 
     await wait(100)
     console.log("hub started")
