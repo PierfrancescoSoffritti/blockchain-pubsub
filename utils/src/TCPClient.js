@@ -21,10 +21,11 @@ function TCPClient(
 
             socket.on('connect', () => {
                 resolve()
-                onConnected()
 
                 self.send({ senderId: clientId })
                 flushOutQueue()
+
+                onConnected()
             })
 
             socket.on('data', message => {
@@ -36,7 +37,6 @@ function TCPClient(
             
             socket.on('close', () => { onConnectionClosed(); resolve(); } )
             socket.on('error', () => { onError(); reject(); } )
-
         })
     }
 

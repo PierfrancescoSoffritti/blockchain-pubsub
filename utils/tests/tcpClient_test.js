@@ -24,14 +24,42 @@ describe('TCPClient', () => {
             // 2. ACT
             tcpServer.start({ port: 8900 })
             await wait(20)
-            tcpClient.connectTo({ port: 8900, ip: "localhost"})
-            await wait(20)
+            await tcpClient.connectTo({ port: 8900, ip: "localhost"})
             tcpClient.finish()
             tcpServer.close()
 
             // 3. ASSERT
             expect(c_onConnecting.calledOnce).to.be.true
             expect(c_onConnected.calledOnce).to.be.true
+        })
+
+        it('connect to wrong address test', async () => {
+            // 1. ARRANGE            
+            const tcpServer = new TCPServer({ })
+
+            const onConnecting = sinon.stub()
+            const onConnected = sinon.stub()
+            const onConnectionClosed = sinon.stub()
+            const onError = sinon.stub()
+            const onMessageReceived = sinon.stub()
+
+            const tcpClient = new TCPClient(
+                "clientId",
+                { onConnecting: onConnecting, onConnected: onConnected, onConnectionClosed: onConnectionClosed, onError: onError, onMessageReceived: onMessageReceived }
+            )
+
+            // 2. ACT
+            tcpServer.start({ port: 8900 })
+            await wait(20)
+            tcpClient.connectTo({ port: 8901, ip: "localhost"})
+            await wait(20)
+            tcpClient.finish()
+            tcpServer.close()
+
+            // 3. ASSERT
+            expect(onConnecting.notCalled).to.be.true
+            expect(onConnected.notCalled).to.be.true
+            expect(onError.calledOnce).to.be.true
         })
     })
 
