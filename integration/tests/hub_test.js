@@ -27,11 +27,12 @@ describe('Hub', function() {
             const hub = new Hub(hubId, hyperledgerFabric)
 
             // 2. ACT
-            hub.start({ publicAddress: 'localhost', tcpPort: 8900, udpPort: 9000 })
-            await wait(2000)
+            await hub.start({ publicAddress: 'localhost', tcpPort: 8900, udpPort: 9000 })
 
             await clientSender.connectTo({ port: 8900, ip: "localhost"})
             await clientReceiver.connectTo({ port: 8900, ip: "localhost"})
+
+            await wait(100)
 
             clientSender.send({
                 recipientId: "clientReceiver",

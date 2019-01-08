@@ -20,8 +20,8 @@ describe('Hub', () => {
             )
 
             // 2. ACT
-            hub.start({ publicAddress: 'localhost', tcpPort: 8900, udpPort: 9000 })
-            tcpClient.connectTo({ port: 8900, ip: "localhost"})
+            await hub.start({ publicAddress: 'localhost', tcpPort: 8900, udpPort: 9000 })
+            await tcpClient.connectTo({ port: 8900, ip: "localhost"})
             await wait(10)
             tcpClient.finish()
             hub.close()
@@ -56,11 +56,9 @@ describe('Hub', () => {
             )
 
             // 2. ACT
-            hub.start({ publicAddress: 'localhost', tcpPort: 8900, udpPort: 9000 })
-            await wait(10)
-            tcpClient1.connectTo({ port: 8900, ip: "localhost" })
-            await wait(10)
-            tcpClient2.connectTo({ port: 8900, ip: "localhost" })
+            await hub.start({ publicAddress: 'localhost', tcpPort: 8900, udpPort: 9000 })
+            await tcpClient1.connectTo({ port: 8900, ip: "localhost" })
+            await tcpClient2.connectTo({ port: 8900, ip: "localhost" })
             await wait(10)
             tcpClient1.finish()
             tcpClient2.finish()
@@ -92,8 +90,8 @@ describe('Hub', () => {
             )
 
             // 2. ACT
-            hub.start({ publicAddress: 'localhost', tcpPort: 8900, udpPort: 9000 })
-            tcpClient.connectTo({ port: 8900, ip: "localhost"})
+            await hub.start({ publicAddress: 'localhost', tcpPort: 8900, udpPort: 9000 })
+            await tcpClient.connectTo({ port: 8900, ip: "localhost"})
             await wait(10)
             tcpClient.send({ recipientId: "client1", isPersistent: true, payload: "message #1" })
             await wait(10)
@@ -119,9 +117,9 @@ describe('Hub', () => {
             )
 
             // 2. ACT
-            hub.start({ publicAddress: 'localhost', tcpPort: 8900, udpPort: 9000 })
-            tcpClient.connectTo({ port: 8900, ip: "localhost"})
-            await wait(5)
+            await hub.start({ publicAddress: 'localhost', tcpPort: 8900, udpPort: 9000 })
+            await tcpClient.connectTo({ port: 8900, ip: "localhost"})
+            await wait(10)
             tcpClient.send({
                 recipientId: "client1",
                 isPersistent: true,
@@ -160,10 +158,10 @@ describe('Hub', () => {
             )
 
             // 2. ACT
-            hub.start({ publicAddress: 'localhost', tcpPort: 8900, udpPort: 9000 })
-            tcpClientSender.connectTo({ port: 8900, ip: "localhost"})
-            tcpClientReceiver.connectTo({ port: 8900, ip: "localhost"})
-            await wait(5)
+            await hub.start({ publicAddress: 'localhost', tcpPort: 8900, udpPort: 9000 })
+            await tcpClientSender.connectTo({ port: 8900, ip: "localhost"})
+            await tcpClientReceiver.connectTo({ port: 8900, ip: "localhost"})
+            await wait(10)
             tcpClientSender.send({ recipientId: "clientReceiver", isPersistent: true, payload: "message #1" })
             await wait(10)
             tcpClientSender.finish()
@@ -196,10 +194,10 @@ describe('Hub', () => {
             )
 
             // 2. ACT
-            hub.start({ publicAddress: 'localhost', tcpPort: 8900, udpPort: 9000 })
-            tcpClient1.connectTo({ port: 8900, ip: "localhost"})
-            tcpClient2.connectTo({ port: 8900, ip: "localhost"})
-            await wait(5)
+            await hub.start({ publicAddress: 'localhost', tcpPort: 8900, udpPort: 9000 })
+            await tcpClient1.connectTo({ port: 8900, ip: "localhost"})
+            await tcpClient2.connectTo({ port: 8900, ip: "localhost"})
+            await wait(10)
             tcpClient1.send({ recipientId: "*", isPersistent: true, payload: "message #1" })
             await wait(10)
             tcpClient1.finish()
@@ -230,8 +228,8 @@ describe('Hub', () => {
             )
 
             // 2. ACT
-            hub.start({ publicAddress: 'localhost', tcpPort: 8900, udpPort: 9000 })
-            tcpClient.connectTo({ port: 8900, ip: "localhost"})
+            await hub.start({ publicAddress: 'localhost', tcpPort: 8900, udpPort: 9000 })
+            await tcpClient.connectTo({ port: 8900, ip: "localhost"})
             await wait(10)
             tcpClient.send({ recipientId: "client1", isPersistent: false, payload: "message #1" })
             await wait(10)
@@ -257,8 +255,8 @@ describe('Hub', () => {
             )
 
             // 2. ACT
-            hub.start({ publicAddress: 'localhost', tcpPort: 8900, udpPort: 9000 })
-            tcpClient.connectTo({ port: 8900, ip: "localhost"})
+            await hub.start({ publicAddress: 'localhost', tcpPort: 8900, udpPort: 9000 })
+            await tcpClient.connectTo({ port: 8900, ip: "localhost"})
             await wait(20)
             tcpClient.send({
                 recipientId: "client1",
@@ -298,9 +296,9 @@ describe('Hub', () => {
             )
 
             // 2. ACT
-            hub.start({ publicAddress: 'localhost', tcpPort: 8900, udpPort: 9000 })
-            tcpClientSender.connectTo({ port: 8900, ip: "localhost"})
-            tcpClientReceiver.connectTo({ port: 8900, ip: "localhost"})
+            await hub.start({ publicAddress: 'localhost', tcpPort: 8900, udpPort: 9000 })
+            await tcpClientSender.connectTo({ port: 8900, ip: "localhost"})
+            await tcpClientReceiver.connectTo({ port: 8900, ip: "localhost"})
             await wait(20)
             tcpClientSender.send({ recipientId: "clientReceiver", isPersistent: false, payload: "message #1" })
             await wait(20)
@@ -334,9 +332,9 @@ describe('Hub', () => {
             )
 
             // 2. ACT
-            hub.start({ publicAddress: 'localhost', tcpPort: 8900, udpPort: 9000 })
-            tcpClient1.connectTo({ port: 8900, ip: "localhost"})
-            tcpClient2.connectTo({ port: 8900, ip: "localhost"})
+            await hub.start({ publicAddress: 'localhost', tcpPort: 8900, udpPort: 9000 })
+            await tcpClient1.connectTo({ port: 8900, ip: "localhost"})
+            await tcpClient2.connectTo({ port: 8900, ip: "localhost"})
             await wait(20)
             tcpClient1.send({ recipientId: "*", isPersistent: false, payload: "message #1" })
             await wait(20)
