@@ -2,7 +2,7 @@ const expect = require('chai').expect
 const sinon = require('sinon')
 const { TCPClient, wait } = require('blockchain-pubsub-utils')
 const hyperledgerFabric = require('blockchain-pubsub-hyperledger-fabric-adapter')
-const { Hub } = require('hub')
+const { Hub } = require('blockchain-pubsub-hub')
 
 describe('Hub', function() {
     describe('connection', function() {

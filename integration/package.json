@@ -1,7 +1,7 @@
 {
-    "name": "pubsub-examples",
+    "name": "blockchain-pubsub-integration",
     "version": "1.0.0",
-    "description": "pubsub examples",
+    "description": "integration module",
     "main": "test.js",
     "scripts": {
         "test": "find ./tests -name '*_test.js' | xargs mocha -R spec",
@@ -9,8 +9,8 @@
     },
     "dependencies": {
         "blockchain-pubsub-hyperledger-fabric-adapter": "file:../blockchain/hyperledgerFabric",
-        "hub": "file:../hub",
-        "pubsub": "file:../pubsub",
+        "blockchain-pubsub-hub": "file:../hub",
+        "blockchain-pubsub-pubsub": "file:../pubsub",
         "blockchain-pubsub-utils": "file:../utils",
         "chai": "^4.2.0",
         "mocha": "^5.2.0",

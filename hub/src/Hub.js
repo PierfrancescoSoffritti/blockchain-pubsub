@@ -1,6 +1,6 @@
 const net = require('net')
 const dgram = require('dgram');
-const PersistentDataSourcePubSub = require('pubsub')
+const PersistentDataSourcePubSub = require('blockchain-pubsub-pubsub')
 const Dispatcher = require('./Dispatcher')
 
 const SEPARATOR = "$$SEP$$"

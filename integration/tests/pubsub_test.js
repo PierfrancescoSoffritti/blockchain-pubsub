@@ -1,6 +1,6 @@
 const expect = require('chai').expect
 const sinon = require('sinon')
-const PersistentDataSourcePubSub = require('pubsub')
+const PersistentDataSourcePubSub = require('blockchain-pubsub-pubsub')
 const hyperledgerFabric = require('blockchain-pubsub-hyperledger-fabric-adapter')
 const { wait } = require('blockchain-pubsub-utils')
 

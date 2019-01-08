@@ -1,5 +1,5 @@
 {
-    "name": "hub",
+    "name": "blockchain-pubsub-hub",
     "version": "1.0.0",
     "description": "hub of distributed pubsub application",
     "main": "index.js",
