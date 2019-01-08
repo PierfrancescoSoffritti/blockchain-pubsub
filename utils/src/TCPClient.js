@@ -14,29 +14,28 @@ function TCPClient(
     this.connectTo = function({ port, ip }) {
         return new Promise((resolve, reject) => {
 
-            const client = new net.Socket()
-            clientSocket = client
+            const socket = new net.Socket()
+            clientSocket = socket
 
-            client.connect({ port, ip }, onConnecting )
+            socket.connect({ port, ip }, onConnecting )
 
-            client.on('connect', () => {
+            socket.on('connect', () => {
                 resolve()
-
                 onConnected()
 
                 self.send({ senderId: clientId })
                 flushOutQueue()
             })
 
-            client.on('data', message => {
+            socket.on('data', message => {
                 String(message).split(SEPARATOR)
                     .filter(string => string.trim().length !== 0)
                     .map(message => JSON.parse(message))
                     .forEach(message => onMessageReceived(message) )
             })
             
-            client.on('close', () => { onConnectionClosed(); resolve(); } )
-            client.on('error', () => { onError(); reject(); } )
+            socket.on('close', () => { onConnectionClosed(); resolve(); } )
+            socket.on('error', () => { onError(); reject(); } )
 
         })
     }
@@ -65,4 +64,4 @@ function TCPClient(
     }
 }
 
-module.exports = TCPClient;
+module.exports = TCPClient
