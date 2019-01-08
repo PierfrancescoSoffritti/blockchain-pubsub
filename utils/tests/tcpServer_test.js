@@ -113,10 +113,11 @@ describe('TCPCServer', () => {
             // 2. ACT
             tcpServer.start({ port: 8900 })
             tcpClient.connectTo({ port: 8900, ip: "localhost"})
+            await wait(20)
             tcpClient.send("message #1")
             tcpClient.send("message #2")
             tcpClient.send("message #3")
-            await wait(10)
+            await wait(20)
             tcpServer.close()
             tcpClient.finish()
 
