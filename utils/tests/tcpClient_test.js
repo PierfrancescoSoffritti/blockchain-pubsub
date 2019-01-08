@@ -23,8 +23,9 @@ describe('TCPClient', () => {
 
             // 2. ACT
             tcpServer.start({ port: 8900 })
+            await wait(20)
             tcpClient.connectTo({ port: 8900, ip: "localhost"})
-            await wait(4)
+            await wait(20)
             tcpClient.finish()
             tcpServer.close()
 

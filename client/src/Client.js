@@ -11,6 +11,9 @@ function Client(clientId) {
     }
 
     this.publish = function({ recipientId, isPersistent, message }) {
+        if(!message || !message.name || !message.content)
+            throw `Message is not properly formatted. 'name' and 'content' fields are expected.`
+            
         tcpClient.send({ recipientId, isPersistent, payload: message })
     }
 
