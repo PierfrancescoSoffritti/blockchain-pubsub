@@ -1,13 +1,22 @@
-function Client() {
+const { EventBus, TCPClient } = require('blockchain-pubsub-utils')
 
-    const subscriptions = { }
-    
-    tcpclient.onNewMessage(message => Object.keys(subscriptions).filter(key => key === message.topic).forEach )
+function Client(clientId) {
+    const tcpClient = new TCPClient(
+        clientId,
+        { onMessageReceived: message => EventBus.post(message.payload.name, message.payload.content) }
+    )
 
-    this.publish = function() {
+    this.connectToHub = async function({ port, ip }) {
+        await tcpClient.connectTo({ port, ip })
+    }
+
+    this.publish = function({ recipientId, isPersistent, message }) {
+        tcpClient.send({ recipientId, isPersistent, payload: message })
     }
 
     this.subscribe = function(topic, action) {
-        subscriptions[topic] = action
+        return EventBus.subscribe(topic, action)
     }
 }
+
+module.exports = Client

@@ -94,7 +94,7 @@ describe('Hub', () => {
             // 2. ACT
             hub.start({ publicAddress: 'localhost', tcpPort: 8900, udpPort: 9000 })
             tcpClient.connectTo({ port: 8900, ip: "localhost"})
-            await wait(5)
+            await wait(10)
             tcpClient.send({ recipientId: "client1", isPersistent: true, payload: "message #1" })
             await wait(10)
             tcpClient.finish()

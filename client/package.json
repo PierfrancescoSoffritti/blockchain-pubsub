@@ -6,6 +6,9 @@
     "scripts": {
         "test": "find ./tests -name '*_test.js' | xargs mocha -R spec"
     },
+    "dependencies": {
+        "blockchain-pubsub-utils": "file:../utils"
+    },
     "devDependencies": {
         "chai": "^4.2.0",
         "mocha": "^5.2.0",
