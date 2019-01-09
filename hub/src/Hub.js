@@ -79,7 +79,7 @@ function Hub(hubId, persistendDataLayer) {
             }
         })    
         socket.on('end', () => delete clientsLocalMap[clientId] )
-        socket.on('error', () => delete clientsLocalMap[clientId] )
+        socket.on('error', error => { delete clientsLocalMap[clientId]; console.error(error) } )
     }
     
     function onNewMessageFromClient(message) {

@@ -16,16 +16,15 @@ function TCPClient(
 
             const socket = new net.Socket()
             clientSocket = socket
-
-            socket.connect({ port, ip }, onConnecting )
-
+            
+            socket.connect({ port, ip }, onConnecting)
+            
             socket.on('connect', () => {
-                resolve()
-
                 self.send({ senderId: clientId })
                 flushOutQueue()
 
                 onConnected()
+                resolve()
             })
 
             socket.on('data', message => {
@@ -36,11 +35,14 @@ function TCPClient(
             })
             
             socket.on('close', () => { onConnectionClosed(); resolve(); } )
-            socket.on('error', () => { onError(); reject(); } )
+            socket.on('error', error => { onError(error); reject(`Error occurred while connecting to hub at ${ip}:${port} :\n${error}`); } )
         })
     }
 
-    this.send = function(message) {        
+    this.send = function(message) {     
+        if(!clientSocket)
+            throw `Connection not initiated`
+
         message.senderId = clientId
 
         if(!clientSocket.connecting)
@@ -50,6 +52,9 @@ function TCPClient(
     }
 
     this.finish = function() {
+        if(!clientSocket)
+            throw `Connection not initiated`
+
         if(clientSocket.connecting)
             clientSocket.on('connect', () => { onConnected(); clientSocket.end(); } )
         else
