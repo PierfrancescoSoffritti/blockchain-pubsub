@@ -34,7 +34,7 @@ function Actor({ actorId, context, state = { }, plans = detaultPlan }) {
 
     this.onReceive = function(name, action) {
         const subscription = pubsubClient.subscribe(name, action)
-        subscriptions.push(subscriptions)
+        subscriptions.push(subscription)
         return subscription
     }
 
