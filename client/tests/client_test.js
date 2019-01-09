@@ -1,6 +1,6 @@
 const expect = require('chai').expect
 const sinon = require('sinon')
-const { Client } = require('../src/Client')
+const Client = require('../src/Client')
 const { MockPersistentDataLayer, wait } = require('blockchain-pubsub-utils')
 const { Hub } = require('blockchain-pubsub-hub')
 
