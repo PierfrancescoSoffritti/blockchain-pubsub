@@ -18,7 +18,7 @@ function PersistentDataSourcePubSub(hubId, persistentDataLayer, { topic = "MSG" 
         const newMessageId = messageIdGenerator.nextMessageId(lastSentMessageId)
         lastSentMessageId = newMessageId;
 
-        await persistentDataLayer.persist( { id: `${newMessageId}-${hubId}`, content: message } )
+        await persistentDataLayer.persist({ id: `${newMessageId}-${hubId}`, content: message })
     }
 
     this.onNewMessage = async function(messageListener) {
