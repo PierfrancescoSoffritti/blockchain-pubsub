@@ -9,11 +9,18 @@ const subscriptions = []
 function Actor( { actorId, context, state = { }, plans = detaultPlan } ) {
     if(!actorId) throw "Wrong arguments. actorId not defined"
     if(!context || !context.hubIp || !context.hubIp) throw "Wrong arguments. Context not defined or properly formed. 'hubIp' and 'hubPort' are required properties"
+    if(!plans.startPlan) throw `No startPlan defined for actor ${actorId}`
 
+    const self = this
     const planExecutor = new PlanExecutor(this)
     const pubSubClient = new PubSubClient(actorId)
 
-    await pubSubClient.connectToHub({ port: context.hubPort, ip: context.hubIp})
+    start()
+
+    async function start() {
+        await pubSubClient.connectToHub({ port: context.hubPort, ip: context.hubIp })
+        self.switchToPlan("startPlan")
+    }
     
     this.switchToPlan = function(planName) {
         const plan = plans[planName]
@@ -28,7 +35,7 @@ function Actor( { actorId, context, state = { }, plans = detaultPlan } ) {
         }
     }
 
-    this.send = function(message) {
+    this.emit = function(message) {
         pubSubClient.publish(message)
     }
 
@@ -44,8 +51,6 @@ function Actor( { actorId, context, state = { }, plans = detaultPlan } ) {
         subscriptions.forEach(subscription => subscription.unsubscribe())
         subscriptions.length = 0
     }
-
-    this.switchToPlan("startPlan")
 }
 
 module.exports = Actor

@@ -1,7 +1,8 @@
-const detaultAction = actor => console.log("no action for this plan")
 const defaultFinalAction = actor => { }
 
-function Plan( action = detaultAction, finalAction = defaultFinalAction ) {
+function Plan(action, finalAction = defaultFinalAction) {
+    if(!action) throw `No action defined for this plan`
+    
     this.action = action
     this.finalAction = finalAction
 }
