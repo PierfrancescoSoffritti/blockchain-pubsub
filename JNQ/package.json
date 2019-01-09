@@ -1,0 +1,19 @@
+{
+    "name": "blockchain-pubsub-jnq",
+    "version": "1.0.0",
+    "description": "blockchain-pubsub port of JNQ (domain specific language/library)",
+    "main": "index.js",
+    "scripts": {
+        "test": "find ./tests -name '*_test.js' | xargs mocha -R spec"
+    },
+    "dependencies": {
+        "blockchain-pubsub-client": "file:../client",
+        "blockchain-pubsub-utils": "file:../utils"
+    },
+    "devDependencies": {
+        "blockchain-pubsub-hub": "file:../hub",
+        "chai": "^4.2.0",
+        "mocha": "^5.2.0",
+        "sinon": "^7.2.2"
+    }
+}
