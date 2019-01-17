@@ -14,10 +14,10 @@ function subscribe(eventType, callback) {
     subscriptions[eventType][id] = callback
 
     return { 
-        unsubscribe: () => { 
-            Object.keys(subscriptions[eventType]).length == 1 ?
-            delete subscriptions[eventType] : delete subscriptions[eventType][id]
-        } 
+        unsubscribe: () => {
+            delete subscriptions[eventType][id]
+            if( Object.keys(subscriptions[eventType]).length === 0 ) delete subscriptions[eventType]
+        }
     }
 }
 
