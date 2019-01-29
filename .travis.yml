@@ -3,7 +3,7 @@ node_js:
  - "8"
 env:
  - TEST_DIR=utils
- - TEST_DIR=pubsub
+ - TEST_DIR=broker
  - TEST_DIR=hub
  - TEST_DIR=client
  - TEST_DIR=JNQ
