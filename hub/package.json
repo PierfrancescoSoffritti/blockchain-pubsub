@@ -8,7 +8,7 @@
         "startFabric": "./node_modules/blockchain-pubsub-hyperledger-fabric-adapter/startFabric.sh node"
     },
     "dependencies": {
-        "blockchain-pubsub-pubsub": "file:../pubsub"
+        "blockchain-pubsub-pubsub": "file:../broker"
     },
     "devDependencies": {
         "blockchain-pubsub-utils": "file:../utils",

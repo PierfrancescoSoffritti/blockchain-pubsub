@@ -10,7 +10,7 @@
     "dependencies": {
         "blockchain-pubsub-hyperledger-fabric-adapter": "file:../blockchain/hyperledgerFabric",
         "blockchain-pubsub-hub": "file:../hub",
-        "blockchain-pubsub-pubsub": "file:../pubsub",
+        "blockchain-pubsub-pubsub": "file:../broker",
         "blockchain-pubsub-client": "file:../client",
         "blockchain-pubsub-utils": "file:../utils",
         "chai": "^4.2.0",
