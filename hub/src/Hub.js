@@ -1,6 +1,6 @@
 const net = require('net')
 const dgram = require('dgram');
-const PersistentDataSourcePubSub = require('blockchain-pubsub-pubsub')
+const PubSub = require('blockchain-pubsub-pubsub')
 const Dispatcher = require('./Dispatcher')
 
 const SEPARATOR = "$$SEP$$"
@@ -15,8 +15,8 @@ function Hub(hubId, persistendDataLayer) {
     // maps clientId to socket
     const clientsLocalMap = {}
 
-    const clientsConnectionsPubSub = new PersistentDataSourcePubSub(hubId, persistendDataLayer, { topic: "CONNECTEDqdddfwwdfddfsdfwer" })
-    const messagesPubSub = new PersistentDataSourcePubSub(hubId, persistendDataLayer, { topic: "MSGqweqwddfdfdfdfsdwdwe" })
+    const clientsConnectionsPubSub = new PubSub(hubId, persistendDataLayer, { topic: "CONNECTED" })
+    const messagesPubSub = new PubSub(hubId, persistendDataLayer, { topic: "MSG" })
     
     let connectionsPubSubConnection
     let messagesPubSubConnection
