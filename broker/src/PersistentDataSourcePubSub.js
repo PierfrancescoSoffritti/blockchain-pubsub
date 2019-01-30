@@ -1,6 +1,6 @@
 const MessageIdGenerator = require('./MessageIdGenerator')
 
-function PersistentDataSourcePubSub(hubId, persistentDataLayer, { topic = "MSG" } = { } ) {
+function PersistentDataSourcePubSub(id, dataLayerAdapter, { topic = "MSG" } = { } ) {
     const messageIdGenerator = new MessageIdGenerator(topic)
 
     const onNewMessageListeners = []
@@ -11,14 +11,14 @@ function PersistentDataSourcePubSub(hubId, persistentDataLayer, { topic = "MSG" 
     const dataLayerSubscriptionPromise = subscribeToDataLayer()
 
     async function subscribeToDataLayer() {
-        return await persistentDataLayer.onDataPersisted(onNewPersistentDataAvailable)
+        return await dataLayerAdapter.onDataPersisted(onNewPersistentDataAvailable)
     }
 
     this.sendMessage = async function(message) {        
         const newMessageId = messageIdGenerator.nextMessageId(lastSentMessageId)
         lastSentMessageId = newMessageId;
 
-        await persistentDataLayer.persist({ id: `${newMessageId}-${hubId}`, content: message })
+        await dataLayerAdapter.persist({ id: `${newMessageId}-${id}`, content: message })
     }
 
     this.onNewMessage = async function(messageListener) {
@@ -34,7 +34,7 @@ function PersistentDataSourcePubSub(hubId, persistentDataLayer, { topic = "MSG" 
     async function queryNewMessages(queryLowerBound = lastQueryMessageId) {       
         const queryUpperBound = messageIdGenerator.addOffset(queryLowerBound, 10)
         
-        const response = await persistentDataLayer.queryRange(queryLowerBound, queryUpperBound)
+        const response = await dataLayerAdapter.queryRange(queryLowerBound, queryUpperBound)
 
         if(response.length === 0)
             return []
